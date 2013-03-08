@@ -4,6 +4,6 @@ A C# IRC bot compiled with .NET 4.0 and utilizing the AccelIRC library. This pro
 
 Over the past year or so I've been fiddling around with this program a lot of things have changed.  I am currently working on the "2.0" version of the bot which entails a complete re-write of the core program as well as releasing the source.
 
-If you want to see the bot in it's current state, you can head on over to irc.esper.net:6667 #jefe323.  You can see a full list of commands here: http://www.jefe323.com/index.php?/topic/4-
+If you want to see the bot in it's current state, you can head on over to irc.esper.net:6667 #jefe323.  You can see a full list of commands here: http://www.jefe323.com/topic/4-
 
 This README will be updated with all the commands and features once the new version is complete.
