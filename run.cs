@@ -84,6 +84,9 @@ namespace Botler
                     case "st":
                         Commands.Core.tell.get(args, Channel, Nick, irc);
                         break;
+                    case "seen":
+                        Commands.Core.Seen.get.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;

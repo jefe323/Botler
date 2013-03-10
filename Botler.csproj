@@ -65,6 +65,9 @@
     <Compile Include="Commands\Core\Rem\remove.cs" />
     <Compile Include="Commands\Core\Rem\set.cs" />
     <Compile Include="Commands\Core\Rem\toggle.cs" />
+    <Compile Include="Commands\Core\Seen\get.cs" />
+    <Compile Include="Commands\Core\Seen\person.cs" />
+    <Compile Include="Commands\Core\Seen\set.cs" />
     <Compile Include="Commands\Core\tell.cs" />
     <Compile Include="Commands\Messaging\broadcast.cs" />
     <Compile Include="Commands\Messaging\say.cs" />
@@ -75,14 +78,13 @@
     <Compile Include="Utilities\authorized.cs" />
     <Compile Include="Utilities\plugin.cs" />
     <Compile Include="Utilities\TextFormatting.cs" />
+    <Compile Include="Utilities\timers.cs" />
     <Compile Include="Utilities\update.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\Core\Seen\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

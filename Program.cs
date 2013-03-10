@@ -26,6 +26,7 @@ namespace Botler
         static internal Dictionary<string, string[]> pluginCommands = new Dictionary<string, string[]>();
 
         static internal List<string> tellList = new List<string>();
+        static internal List<Commands.Core.Seen.person> seenList = new List<Commands.Core.Seen.person>();
 
         //settings variables
         /////////////////////////////////////////////
@@ -74,6 +75,7 @@ namespace Botler
             irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(irc_OnError);
             irc.OnPart += new PartEventHandler(irc_OnPart);
             irc.OnKick += new KickEventHandler(irc_OnKick);
+            irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
 
             ///////////////////////
             //Connect to irc server
@@ -105,6 +107,7 @@ namespace Botler
                     TextFormatting.ConsoleERROR(e.Message + "\n");
                 }
                 irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
+                Utilities.timers.Begin();
 
                 irc.Listen();
                 irc.Disconnect();
@@ -114,6 +117,11 @@ namespace Botler
                 Console.WriteLine(e.Message);
                 //Exit();
             }
+        }
+
+        static void irc_OnNickChange(object sender, NickChangeEventArgs e)
+        {
+            //check for nicks on both old and new nicks
         }
 
         static void irc_OnMotd(object sender, MotdEventArgs e)
@@ -149,6 +157,7 @@ namespace Botler
 
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
+            Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
             if (tellList.Contains(e.Data.Nick) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
                 irc.SendMessage(SendType.Notice, e.Data.Nick, String.Format("You have messages waiting for you sir, please use {0}showtell to view them", bot_comm_char));
