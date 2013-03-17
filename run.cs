@@ -87,6 +87,12 @@ namespace Botler
                     case "seen":
                         Commands.Core.Seen.get.command(args, Channel, Nick, irc);
                         break;
+                    case "addquote":
+                        Commands.Core.quote.set(args, Channel, Nick, irc);
+                        break;
+                    case "quote":
+                        Commands.Core.quote.get(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;

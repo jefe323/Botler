@@ -158,6 +158,8 @@ namespace Botler
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
             Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
+            //black list
+            Console.WriteLine(e.Data.Host);
             if (tellList.Contains(e.Data.Nick) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
                 irc.SendMessage(SendType.Notice, e.Data.Nick, String.Format("You have messages waiting for you sir, please use {0}showtell to view them", bot_comm_char));

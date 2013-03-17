@@ -60,6 +60,7 @@
     <Compile Include="Commands\Core\help.cs" />
     <Compile Include="Commands\Core\nick.cs" />
     <Compile Include="Commands\Core\quit.cs" />
+    <Compile Include="Commands\Core\quote.cs" />
     <Compile Include="Commands\Core\Rem\get.cs" />
     <Compile Include="Commands\Core\Rem\info.cs" />
     <Compile Include="Commands\Core\Rem\remove.cs" />
