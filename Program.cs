@@ -122,6 +122,8 @@ namespace Botler
         static void irc_OnNickChange(object sender, NickChangeEventArgs e)
         {
             //check for nicks on both old and new nicks
+            showTells(e.NewNickname);
+            showTells(e.OldNickname);
         }
 
         static void irc_OnMotd(object sender, MotdEventArgs e)
@@ -141,13 +143,10 @@ namespace Botler
 
         static void irc_OnKick(object sender, KickEventArgs e)
         {
-            if (e.Whom == "Botler")
+            if (e.Whom == bot_nick)
             {
                 //make same as part
-                Console.WriteLine("I got kicked :(");
             }
-            else
-                Console.WriteLine(e.Whom + " got kicked");
         }
 
         static void irc_OnPart(object sender, PartEventArgs e)
@@ -159,14 +158,13 @@ namespace Botler
         {
             Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
             
-            if (tellList.Contains(e.Data.Nick) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
+            if (tellList.Contains(e.Data.Nick.ToLower()) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
-                irc.SendMessage(SendType.Notice, e.Data.Nick, String.Format("You have messages waiting for you sir, please use {0}showtell to view them", bot_comm_char));
-                tellList.Remove(e.Data.Nick);
+                showTells(e.Data.Nick);
             }
             if (e.Data.Message.StartsWith(bot_comm_char))
             {
-                bool bl = blacklist(e.Data.Nick, e.Data.Host);
+                bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
                 if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc); }
             }
         }
@@ -175,7 +173,8 @@ namespace Botler
         {
             if (e.Data.Message.StartsWith(bot_comm_char))
             {
-                run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, irc);
+                bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
+                if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, irc); }
             }
         }
 
@@ -261,6 +260,48 @@ namespace Botler
             }
             conn.Close();
             return returnValue;
+        }
+
+        private static void showTells(string nick)
+        {
+            DateTime time = DateTime.Now;
+            string message = string.Empty;
+            MySqlCommand command = Program.conn.CreateCommand();
+
+            command.CommandText = "SELECT COUNT(Nick_To) FROM tell WHERE Nick_To='" + nick.ToLower() + "'";
+            try { Program.conn.Open(); }
+            catch (Exception ex) { Botler.Utilities.TextFormatting.ConsoleERROR(ex.Message + "\n"); }
+            object result = command.ExecuteScalar();
+            Program.conn.Close();
+
+            int max = Convert.ToInt32(result);
+
+            //get first tell
+            if (result != null && max != 0)
+            {
+                command.CommandText = "SELECT Nick_To,Nick_From,Message,Time FROM tell WHERE Nick_To='" + nick.ToLower() + "' LIMIT 0,1";
+                try { Program.conn.Open(); }
+                catch (Exception e) { Botler.Utilities.TextFormatting.ConsoleERROR(e.Message + "\n"); }
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    //Compose output
+                    TimeSpan elapsed = time.Subtract(DateTime.Parse(reader["Time"].ToString()));
+                    message = String.Format("*{5}*({0:%d} days, {1:%h} hours, {2:%m} minutes) Sent from {3} -- {4}", elapsed, elapsed, elapsed, reader["Nick_From"].ToString(), reader["Message"].ToString(), nick);
+                    //send output
+                    irc.SendMessage(SendType.Message, nick, message);
+                }
+                Program.conn.Close();
+            }
+            //else { irc.SendMessage(SendType.Notice, nick, String.Format("I don't seem to have any quotes for the nick sir")); }
+
+            if (max > 1)
+            {
+                irc.SendMessage(SendType.Message, nick, String.Format("You ({2}) have {0} more messages waiting for you sir, please use {1}showtell to view them", (max-1), bot_comm_char, nick));
+            }
+            
+            try { tellList.Remove(nick); }
+            catch { }
         }
     }
 }

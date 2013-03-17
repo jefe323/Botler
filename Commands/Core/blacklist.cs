@@ -21,13 +21,14 @@ namespace Botler.Commands.Core
                     command.CommandText = "INSERT into blacklist VALUES(@nick,@host)";
                     command.Prepare();
 
-                    command.Parameters.AddWithValue("@nick", args[1]);
+                    command.Parameters.AddWithValue("@nick", args[1].ToLower());
                     command.Parameters.AddWithValue("@host", args[2]);
 
                     command.ExecuteNonQuery();
                     Program.conn.Close();
 
-                    irc.SendMessage(SendType.Message, Channel, String.Format("I have added {0}@{1} to the blacklist sir, we don't want naughty people using me", args[1], args[2]));
+                    irc.SendMessage(SendType.Message, Channel, String.Format("I have added {0}@{1} to the blacklist sir, we don't want naughty people using me", args[1].ToLower(), args[2]));
+                    Console.WriteLine("{0} was added to the blacklist", args[1].ToLower());
                 }
                 catch (Exception e) { Botler.Utilities.TextFormatting.ConsoleERROR(e.Message + "\n"); }
             }
