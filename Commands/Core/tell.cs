@@ -20,8 +20,17 @@ namespace Botler.Commands.Core
                 message = message.TrimEnd(' ');
 
                 MySqlCommand command = Program.conn.CreateCommand();
-                command.CommandText = "INSERT into tell (Nick_To,Nick_From,Message,Time) values('" + args[1].ToLower() + "','" + Nick + "','" + message + "','" + tellTime.ToString() + "')";
+
                 Program.conn.Open();
+                command.Connection = Program.conn;
+                command.CommandText = "INSERT into tell VALUES(@to,@from,@message,@time)";
+                command.Prepare();
+
+                command.Parameters.AddWithValue("@to", args[1].ToLower());
+                command.Parameters.AddWithValue("@from", Nick);
+                command.Parameters.AddWithValue("@message", message);
+                command.Parameters.AddWithValue("@time", tellTime.ToString());
+
                 command.ExecuteNonQuery();
                 Program.conn.Close();
 

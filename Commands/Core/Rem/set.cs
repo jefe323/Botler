@@ -36,8 +36,18 @@ namespace Botler.Commands.Core.Rem
                     message = message.Substring(args[0].Length + args[1].Length + 2);
                     message = message.TrimEnd(' ').TrimStart(' ');
 
-                    command.CommandText = "INSERT into rem (Trig,Message,Nick,Channel,Time) values('" + args[1] + "','" + message + "','" + Nick + "','" + Channel.ToLower() + "','" + time.ToString() + "')";
                     Program.conn.Open();
+                    command.Connection = Program.conn;
+                    command.CommandText = "INSERT into rem VALUES(@trig,@message,@nick,@channel,@time,@lck)";
+                    command.Prepare();
+
+                    command.Parameters.AddWithValue("@trig", args[1]);
+                    command.Parameters.AddWithValue("@message", message);
+                    command.Parameters.AddWithValue("@nick", Nick);
+                    command.Parameters.AddWithValue("@channel", Channel.ToLower());
+                    command.Parameters.AddWithValue("@time", time.ToString());
+                    command.Parameters.AddWithValue("@lck", 0);
+
                     command.ExecuteNonQuery();
                     Program.conn.Close();
 
