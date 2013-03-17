@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Core\blacklist.cs" />
     <Compile Include="Commands\Core\Channel\chanop.cs" />
     <Compile Include="Commands\Core\Channel\chantoggles.cs" />
     <Compile Include="Commands\Core\Channel\join.cs" />

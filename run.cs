@@ -88,10 +88,16 @@ namespace Botler
                         Commands.Core.Seen.get.command(args, Channel, Nick, irc);
                         break;
                     case "addquote":
+                    case "aq":
                         Commands.Core.quote.set(args, Channel, Nick, irc);
                         break;
                     case "quote":
+                    case "q":
                         Commands.Core.quote.get(args, Channel, Nick, irc);
+                        break;
+                    case "blacklist":
+                        if (Botler.Utilities.authorized.check(Channel, Nick, "BotOP") == true) { Commands.Core.blacklist.set(args, Channel, Nick, irc); }
+                        else { irc.SendMessage(SendType.Notice, Nick, String.Format("You don't have permission to access that command sir")); }
                         break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);

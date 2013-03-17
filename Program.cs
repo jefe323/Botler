@@ -158,8 +158,7 @@ namespace Botler
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
             Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
-            //black list
-            Console.WriteLine(e.Data.Host);
+            
             if (tellList.Contains(e.Data.Nick) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
                 irc.SendMessage(SendType.Notice, e.Data.Nick, String.Format("You have messages waiting for you sir, please use {0}showtell to view them", bot_comm_char));
@@ -167,7 +166,8 @@ namespace Botler
             }
             if (e.Data.Message.StartsWith(bot_comm_char))
             {
-                run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc);
+                bool bl = blacklist(e.Data.Nick, e.Data.Host);
+                if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc); }
             }
         }
 
@@ -238,6 +238,29 @@ namespace Botler
             for (int i = 0; i < password.Length; i++)
                 Console.Write("*");
             return password;
+        }
+
+        private static bool blacklist(string nick, string host)
+        {
+            bool returnValue = false;
+            MySqlCommand command = Program.conn.CreateCommand();
+            command.CommandText = "SELECT nick,host FROM blacklist WHERE nick='" + nick + "'";
+            try { conn.Open(); }
+            catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
+            MySqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                if (reader["nick"].ToString() == nick && reader["host"].ToString() == host)
+                {
+                    returnValue = true;
+                }
+                else if (reader["host"].ToString() == host)
+                {
+                    returnValue = true;
+                }
+            }
+            conn.Close();
+            return returnValue;
         }
     }
 }
