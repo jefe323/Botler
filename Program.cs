@@ -134,6 +134,8 @@ namespace Botler
         static void irc_OnInvite(object sender, InviteEventArgs e)
         {
             //make equal to .join command
+            string[] jArgs = e.Data.Message.TrimEnd().Substring(Program.bot_comm_char.Length).Split(' ');
+            Commands.Core.Channel.join.command(jArgs, e.Data.Channel, e.Data.Nick, irc);
         }
 
         static void irc_OnError(object sender, Meebey.SmartIrc4net.ErrorEventArgs e)
@@ -146,6 +148,8 @@ namespace Botler
             if (e.Whom == bot_nick)
             {
                 //make same as part
+                string[] pArgs = e.Data.Message.TrimEnd().Substring(Program.bot_comm_char.Length).Split(' ');
+                Commands.Core.Channel.part.command(pArgs, e.Data.Channel, e.Data.Nick, irc);
             }
         }
 

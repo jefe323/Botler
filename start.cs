@@ -16,7 +16,8 @@ namespace Botler
         public static void StepTwo()
         {
             MySQLConnCheck();
-            pluginCheck();
+            //pluginCheck();
+            Utilities.update.checkVersion(Program.dbVersion);
         }
 
         private static void splash()
@@ -184,6 +185,7 @@ namespace Botler
             Program.conn.Close();
         }
 
+        //disabled for initial release
         private static void pluginCheck()
         {
             string currentPath = Directory.GetCurrentDirectory();
