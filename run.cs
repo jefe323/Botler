@@ -99,6 +99,28 @@ namespace Botler
                         if (Botler.Utilities.authorized.check(Channel, Nick, "BotOP") == true) { Commands.Core.blacklist.set(args, Channel, Nick, irc); }
                         else { irc.SendMessage(SendType.Notice, Nick, String.Format("You don't have permission to access that command sir")); }
                         break;
+                    case "google":
+                    case "search":
+                    case "g":
+                        Commands._Google.Search.command(args, Channel, Nick, irc);
+                        break;
+                    case "image":
+                    case "gis":
+                        Commands._Google.ImageSearch.command(args, Channel, Nick, irc);
+                        break;
+                    case "youtube":
+                    case "y":
+                        Commands._Google.Youtube.command(args, Channel, Nick, irc);
+                        break;
+                    case "mcf":
+                        Commands._Google.SpecialSearches.mcf.command(args, Channel, Nick, irc);
+                        break;
+                    case "wiki":
+                        Commands._Google.SpecialSearches.wiki.command(args, Channel, Nick, irc);
+                        break;
+                    case "imdb":
+                        Commands._Google.SpecialSearches.imdb.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
