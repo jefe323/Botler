@@ -28,6 +28,8 @@ namespace Botler
         static internal List<string> tellList = new List<string>();
         static internal List<Commands.Core.Seen.person> seenList = new List<Commands.Core.Seen.person>();
 
+        static internal bool active = true;
+
         //settings variables
         /////////////////////////////////////////////
         static internal int dbVersion = 0;
@@ -71,9 +73,8 @@ namespace Botler
             irc.OnChannelMessage += new IrcEventHandler(irc_OnChannelMessage);
             irc.OnQueryMessage += new IrcEventHandler(irc_OnQueryMessage);
             irc.OnInvite += new InviteEventHandler(irc_OnInvite);
-            irc.OnMotd += new MotdEventHandler(irc_OnMotd);
+            irc.OnConnected += new EventHandler(irc_OnConnected);
             irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(irc_OnError);
-            irc.OnPart += new PartEventHandler(irc_OnPart);
             irc.OnKick += new KickEventHandler(irc_OnKick);
             irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
 
@@ -109,7 +110,10 @@ namespace Botler
                 irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
                 Utilities.timers.Begin();
 
-                irc.Listen();
+                while (active)
+                {
+                    irc.ListenOnce();
+                }
                 irc.Disconnect();
             }
             catch (Exception e) {
@@ -119,6 +123,11 @@ namespace Botler
             }
         }
 
+        static void irc_OnConnected(object sender, EventArgs e)
+        {
+            Console.WriteLine("CONNECTED!");
+        }
+
         static void irc_OnNickChange(object sender, NickChangeEventArgs e)
         {
             //check for nicks on both old and new nicks
@@ -126,15 +135,10 @@ namespace Botler
             showTells(e.OldNickname);
         }
 
-        static void irc_OnMotd(object sender, MotdEventArgs e)
-        {
-            Console.WriteLine("CONNECTED!");
-        }
-
         static void irc_OnInvite(object sender, InviteEventArgs e)
         {
             //make equal to .join command
-            string[] jArgs = e.Data.Message.TrimEnd().Substring(Program.bot_comm_char.Length).Split(' ');
+            string[] jArgs = { "join", e.Data.Channel };
             Commands.Core.Channel.join.command(jArgs, e.Data.Channel, e.Data.Nick, irc);
         }
 
@@ -148,14 +152,9 @@ namespace Botler
             if (e.Whom == bot_nick)
             {
                 //make same as part
-                string[] pArgs = e.Data.Message.TrimEnd().Substring(Program.bot_comm_char.Length).Split(' ');
+                string[] pArgs = { "part", e.Data.Channel };
                 Commands.Core.Channel.part.command(pArgs, e.Data.Channel, e.Data.Nick, irc);
             }
-        }
-
-        static void irc_OnPart(object sender, PartEventArgs e)
-        {
-            Console.WriteLine(e.Who + " has left");
         }
 
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
@@ -185,12 +184,31 @@ namespace Botler
         public static void Exit()
         {
             Console.WriteLine("Now Exiting...");
+            active = false;
             Environment.Exit(0);
         }
 
         private static void JoinChannels()
         {
+            bool chanCheck = false;
             MySqlCommand command = Program.conn.CreateCommand();
+            command.CommandText = "SELECT Channel,ChanOP,SuperUsers,Quiet,secret FROM channels";
+            try { Program.conn.Open(); }
+            catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
+            MySqlDataReader read = command.ExecuteReader();
+            while (read.Read())
+            {
+                if (read["Channel"].ToString() == irc_channel) { chanCheck = true; }
+            }
+            Program.conn.Close();
+            //default channel not found in database, so we'll need to add it
+            if (chanCheck == false)
+            {
+                string[] jArgs = { "join", irc_channel };
+                Commands.Core.Channel.join.command(jArgs, irc_channel, bot_op, irc);
+            }
+            
+            command = Program.conn.CreateCommand();
             command.CommandText = "SELECT Channel,ChanOP,SuperUsers,Quiet,secret FROM channels";
             try { Program.conn.Open(); }
             catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
