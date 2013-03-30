@@ -61,6 +61,7 @@
     <Reference Include="System.Net.Json">
       <HintPath>libs\System.Net.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,6 +87,9 @@
     <Compile Include="Commands\Core\Seen\person.cs" />
     <Compile Include="Commands\Core\Seen\set.cs" />
     <Compile Include="Commands\Core\tell.cs" />
+    <Compile Include="Commands\Links\deadfly.cs" />
+    <Compile Include="Commands\Links\expand.cs" />
+    <Compile Include="Commands\Links\shrink.cs" />
     <Compile Include="Commands\_Google\ImageSearch.cs" />
     <Compile Include="Commands\_Google\Search.cs" />
     <Compile Include="Commands\_Google\SpecialSearches\imdb.cs" />
@@ -107,7 +111,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\Links\" />
     <Folder Include="Commands\Misc\" />
     <Folder Include="Commands\Sites\" />
   </ItemGroup>

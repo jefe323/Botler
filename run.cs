@@ -121,6 +121,15 @@ namespace Botler
                     case "imdb":
                         Commands._Google.SpecialSearches.imdb.command(args, Channel, Nick, irc);
                         break;
+                    case "shrink":
+                        Commands.Links.shrink.command(args, Channel, Nick, irc);
+                        break;
+                    case "expand":
+                        Commands.Links.expand.command(args, Channel, Nick, irc);
+                        break;
+                    case "deadfly":
+                        Commands.Links.deadfly.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
