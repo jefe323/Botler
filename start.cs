@@ -16,7 +16,6 @@ namespace Botler
         public static void StepTwo()
         {
             MySQLConnCheck();
-            //pluginCheck();
             Utilities.update.checkVersion(Program.dbVersion);
         }
 
@@ -183,41 +182,6 @@ namespace Botler
                 Environment.Exit(0);
             }
             Program.conn.Close();
-        }
-
-        //disabled for initial release
-        private static void pluginCheck()
-        {
-            string currentPath = Directory.GetCurrentDirectory();
-            int i = 0;
-
-            Console.WriteLine("Checking Plugins...");
-            try
-            {
-                DirectoryInfo dInfo = new DirectoryInfo(currentPath + "/plugins");
-                Program.filePaths = dInfo.GetFiles(".dll");
-                Program.fileName = new string[Program.filePaths.Length];
-
-                foreach (FileInfo info in Program.filePaths)
-                {
-                    Program.fileName[i] = info.Name.Replace(".dll", "");
-                    i++;
-                }
-                if (i == 0)
-                {
-                    Console.Write("   [");
-                    Utilities.TextFormatting.ConsoleCyan("NOTICE");
-                    Console.WriteLine("] No plugins detected in the /plugins folder");
-                }
-            }
-            catch (DirectoryNotFoundException e)
-            {
-                Utilities.TextFormatting.ConsoleERROR("ERROR: The folder /plugins was not found.  It was either renamed or removed. Please re-add it\n");
-            }
-            catch (Exception e)
-            {
-                Utilities.TextFormatting.ConsoleERROR("ERROR: " + e.Message + "\n");
-            }
         }
 
     }

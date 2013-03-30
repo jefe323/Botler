@@ -78,7 +78,6 @@
     <Compile Include="run.cs" />
     <Compile Include="start.cs" />
     <Compile Include="Utilities\authorized.cs" />
-    <Compile Include="Utilities\plugin.cs" />
     <Compile Include="Utilities\TextFormatting.cs" />
     <Compile Include="Utilities\timers.cs" />
     <Compile Include="Utilities\update.cs" />

@@ -13,17 +13,12 @@ namespace Botler
 {
     class Program
     {
-        static internal string version = "2.0dev6";
+        static internal string version = "2.0dev7";
         static internal int currentDBVersion = 1;
 
         public static IrcClient irc = new IrcClient();
         static internal string connString;
         static internal MySqlConnection conn;
-
-        static internal Assembly assembly;
-        static internal FileInfo[] filePaths;
-        static internal string[] fileName;
-        static internal Dictionary<string, string[]> pluginCommands = new Dictionary<string, string[]>();
 
         static internal List<string> tellList = new List<string>();
         static internal List<Commands.Core.Seen.person> seenList = new List<Commands.Core.Seen.person>();
@@ -110,6 +105,8 @@ namespace Botler
                 irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
                 Utilities.timers.Begin();
 
+                new Thread(new ThreadStart(ReadCommands)).Start();
+
                 while (active)
                 {
                     irc.ListenOnce();
@@ -125,7 +122,7 @@ namespace Botler
 
         static void irc_OnConnected(object sender, EventArgs e)
         {
-            Console.WriteLine("CONNECTED!");
+            Console.WriteLine("\nCONNECTED!\n");
         }
 
         static void irc_OnNickChange(object sender, NickChangeEventArgs e)
@@ -178,6 +175,25 @@ namespace Botler
             {
                 bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
                 if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, irc); }
+            }
+        }
+
+        public static void ReadCommands()
+        {
+            // here we read the commands from the stdin and send it to the IRC API
+            // WARNING, it uses WriteLine() means you need to enter RFC commands
+            // like "JOIN #test" and then "PRIVMSG #test :hello to you"
+            while (true)
+            {
+                string cmd = System.Console.ReadLine();
+                if (cmd.StartsWith("/test"))
+                {
+                    Console.WriteLine("Success sir");
+                }
+                else
+                {
+                    irc.WriteLine(cmd);
+                }
             }
         }
 
