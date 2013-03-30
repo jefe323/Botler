@@ -148,6 +148,36 @@ namespace Botler
                     case "ei":
                         Commands.Misc.EightBall.command(args, Channel, Nick, irc);
                         break;
+                    case "urban":
+                    case "ur":
+                        Commands.Sites.UrbanDict.command(args, Channel, Nick, irc);
+                        break;
+                    case "u":
+                        Commands.Sites.u.command(args, Channel, Nick, irc);
+                        break;
+                    case "twitter":
+                        Commands.Sites.twitter.command(args, Channel, Nick, irc);
+                        break;
+                    case "twitch":
+                        Commands.Sites.twitch.command(args, Channel, Nick, irc);
+                        break;
+                    case "synonym":
+                    case "syn":
+                        Commands.Sites.Synonym.command(args, Channel, Nick, irc);
+                        break;
+                    case "lastfm":
+                    case "l":
+                        Commands.Sites.lastfm.command(args, Channel, Nick, irc);
+                        break;
+                    case "dict":
+                    case "define":
+                    case "d":
+                        Commands.Sites.Dict.command(args, Channel, Nick, irc);
+                        break;
+                    case "anagram":
+                    case "an":
+                        Commands.Sites.anagram.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
