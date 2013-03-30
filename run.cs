@@ -130,6 +130,24 @@ namespace Botler
                     case "deadfly":
                         Commands.Links.deadfly.command(args, Channel, Nick, irc);
                         break;
+                    case "choose":
+                        Commands.Misc.choose.command(args, Channel, Nick, irc);
+                        break;
+                    case "fire":
+                        Commands.Misc.fire.command(args, Channel, Nick, irc);
+                        break;
+                    case "random":
+                    case "r":
+                        Commands.Misc.random.command(args, Channel, Nick, irc);
+                        break;
+                    case "shoot":
+                        Commands.Misc.shoot.command(args, Channel, Nick, irc);
+                        break;
+                    case "eightball":
+                    case "8ball":
+                    case "ei":
+                        Commands.Misc.EightBall.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
