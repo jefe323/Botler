@@ -90,6 +90,18 @@
     <Compile Include="Commands\Links\deadfly.cs" />
     <Compile Include="Commands\Links\expand.cs" />
     <Compile Include="Commands\Links\shrink.cs" />
+    <Compile Include="Commands\Misc\choose.cs" />
+    <Compile Include="Commands\Misc\EightBall.cs" />
+    <Compile Include="Commands\Misc\fire.cs" />
+    <Compile Include="Commands\Misc\random.cs" />
+    <Compile Include="Commands\Misc\shoot.cs" />
+    <Compile Include="Commands\Sites\anagram.cs" />
+    <Compile Include="Commands\Sites\Dict.cs" />
+    <Compile Include="Commands\Sites\lastfm.cs" />
+    <Compile Include="Commands\Sites\Synonym.cs" />
+    <Compile Include="Commands\Sites\twitter.cs" />
+    <Compile Include="Commands\Sites\u.cs" />
+    <Compile Include="Commands\Sites\UrbanDict.cs" />
     <Compile Include="Commands\_Google\ImageSearch.cs" />
     <Compile Include="Commands\_Google\Search.cs" />
     <Compile Include="Commands\_Google\SpecialSearches\imdb.cs" />
@@ -103,17 +115,16 @@
     <Compile Include="run.cs" />
     <Compile Include="start.cs" />
     <Compile Include="Utilities\authorized.cs" />
+    <Compile Include="Utilities\HtmlRemoval.cs" />
     <Compile Include="Utilities\TextFormatting.cs" />
     <Compile Include="Utilities\timers.cs" />
     <Compile Include="Utilities\update.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="Commands\Sites\twitch.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\Misc\" />
-    <Folder Include="Commands\Sites\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
