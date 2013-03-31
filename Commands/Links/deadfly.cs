@@ -28,10 +28,9 @@ namespace Botler.Commands.Links
         {
             using (var client = new WebClient())
             {
-                string check = "var url = ";
+                string check = "var zzz = ";
                 string final = "error";
 
-                //client.DownloadFile(input, "output.txt");
                 string content = client.DownloadString(input);
                 content.Trim();
 
@@ -42,13 +41,15 @@ namespace Botler.Commands.Links
                     if (result[i].Contains(check))
                     {
                         final = result[i];
-                        final = final.Replace("var url = '", " ");
+                        final = final.Replace("var zzz = '", " ");
                         final = final.Replace("'", " ");
                         final = final.Replace(";", " ");
                         final = final.Trim();
                     }
                 }
-
+                return final;
+                /*
+                 * It looks like this portion of the code is no longer needed, keeping just in case though....
                 //just in case it returns only a piece of the needed URL
                 if (!final.StartsWith("http://adf.ly") && !final.StartsWith("https://adf.ly"))
                 {
@@ -61,7 +62,7 @@ namespace Botler.Commands.Links
                 WebResponse response = request.GetResponse();
                 string finalUrl = response.ResponseUri.ToString();
                 response.Close();
-                return finalUrl;
+                return finalUrl;*/
             }
         }
     }
