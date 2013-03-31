@@ -69,6 +69,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\API\location.cs" />
+    <Compile Include="Commands\API\time.cs" />
+    <Compile Include="Commands\API\weather.cs" />
     <Compile Include="Commands\Core\blacklist.cs" />
     <Compile Include="Commands\Core\Channel\chanop.cs" />
     <Compile Include="Commands\Core\Channel\chantoggles.cs" />

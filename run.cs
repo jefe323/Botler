@@ -178,6 +178,18 @@ namespace Botler
                     case "an":
                         Commands.Sites.anagram.command(args, Channel, Nick, irc);
                         break;
+                    case "weather":
+                    case "we":
+                    case "w":
+                        Commands.API.weather.command(args, Channel, Nick, irc);
+                        break;
+                    case "location":
+                    case "loc":
+                        Commands.API.location.command(args, Channel, Nick, irc);
+                        break;
+                    case "time":
+                        Commands.API.time.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
