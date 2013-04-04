@@ -13,7 +13,7 @@ namespace Botler
 {
     class Program
     {
-        static internal string version = "2.0dev7";
+        static internal string version = "2.0";
         static internal int currentDBVersion = 1;
 
         public static IrcClient irc = new IrcClient();
@@ -58,6 +58,8 @@ namespace Botler
             irc.Encoding = System.Text.Encoding.UTF8;
             irc.ActiveChannelSyncing = true;
             irc.AutoReconnect = true;
+            irc.AutoRetry = true;
+            irc.AutoRelogin = true;
             irc.AutoJoinOnInvite = true;
 
             start.StepTwo();
@@ -72,6 +74,7 @@ namespace Botler
             irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(irc_OnError);
             irc.OnKick += new KickEventHandler(irc_OnKick);
             irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
+            irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
 
             ///////////////////////
             //Connect to irc server
@@ -117,6 +120,29 @@ namespace Botler
                 Console.WriteLine("I dun goofed");
                 Console.WriteLine(e.Message);
                 //Exit();
+            }
+        }
+
+        static void irc_OnDisconnected(object sender, EventArgs e)
+        {
+            bool connected = false;
+            Console.WriteLine("Lost connection to server, attempting to reconnect...");
+
+            while (connected == false)
+            {
+                try 
+                { 
+                    irc.Connect(irc_server, irc_port);
+                    irc.Login("Botler", "Botler", 1, "Botler");
+                    //irc.RfcJoin(channel);
+                    JoinChannels();
+                    connected = true;
+                }
+                catch (Exception fail)
+                {
+                    Console.WriteLine("Failed to connect, trying again in 30 seconds...");
+                    Thread.Sleep(30000);
+                }
             }
         }
 

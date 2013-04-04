@@ -16,6 +16,9 @@ namespace Botler
             {
                 switch (cmd.ToLower())
                 {
+                    case "info":
+                        irc.SendMessage(SendType.Message, Channel, string.Format("{0} is a C# IRC bot written by jefe323 using the SmartIRC4Net library. Version {1}. Please see http://www.jefe323.com for more information or support", Program.bot_nick, Program.version));
+                        break;
                     case "ghost":
                         if (Botler.Utilities.authorized.check(Channel, Nick, "BotOP") == true) { Commands.Core.nick.ghost(args, Channel, Nick, irc); }
                         else { irc.SendMessage(SendType.Notice, Nick, String.Format("You don't have permission to access that command sir")); }
