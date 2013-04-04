@@ -25,8 +25,10 @@ namespace Botler.Commands.API
 
         private static string output(string input)
         {
-            string api = getApi();
+            string api = getApiKey.getApi("wwo_key");
             string final = "error";
+
+            if (api == "" || api == null) { return "No valid API key found"; }
 
             using (var client = new WebClient())
             {
@@ -39,23 +41,6 @@ namespace Botler.Commands.API
                 final = string.Format("The current date/time for {0} is: {1} {2}GMT", input, dataSplit[0], dataSplit[1]);
             }
 
-            return final;
-        }
-
-        private static string getApi()
-        {
-            string line;
-            string final = string.Empty;
-            StreamReader file = new StreamReader("api.txt");
-            while ((line = file.ReadLine()) != null)
-            {
-                if (line.StartsWith("wwo_key"))
-                {
-                    final = line.Replace("wwo_key=", "");
-                    break;
-                }
-            }
-            file.Close();
             return final;
         }
     }

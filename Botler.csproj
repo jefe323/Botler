@@ -61,6 +61,7 @@
     <Reference Include="System.Net.Json">
       <HintPath>libs\System.Net.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,8 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\API\getApiKey.cs" />
     <Compile Include="Commands\API\location.cs" />
     <Compile Include="Commands\API\time.cs" />
+    <Compile Include="Commands\API\translate.cs" />
     <Compile Include="Commands\API\weather.cs" />
     <Compile Include="Commands\Core\blacklist.cs" />
     <Compile Include="Commands\Core\Channel\chanop.cs" />

@@ -193,6 +193,9 @@ namespace Botler
                     case "time":
                         Commands.API.time.command(args, Channel, Nick, irc);
                         break;
+                    case "translate":
+                        Commands.API.translate.command(args, Channel, Nick, irc);
+                        break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
                         break;
