@@ -61,6 +61,7 @@ namespace Botler
             irc.AutoRetry = true;
             irc.AutoRelogin = true;
             irc.AutoJoinOnInvite = true;
+            irc.SendDelay = 500;
 
             start.StepTwo();
 
@@ -75,6 +76,7 @@ namespace Botler
             irc.OnKick += new KickEventHandler(irc_OnKick);
             irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
             irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
+            irc.OnModeChange += new IrcEventHandler(irc_OnModeChange);
 
             ///////////////////////
             //Connect to irc server
@@ -98,12 +100,12 @@ namespace Botler
 
             try
             {
-                irc.Login("Botler", "Botler", 1, "Botler");
-                //irc.RfcJoin(channel);
+                irc.Login(bot_nick, "Botler", 1, "Botler");
+                //irc.RfcJoin("#Botler");
                 try { JoinChannels(); }
-                catch (Exception e)
+                catch (Exception fail)
                 {
-                    TextFormatting.ConsoleERROR(e.Message + "\n");
+                    TextFormatting.ConsoleERROR(fail.Message + "\n");
                 }
                 irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
                 Utilities.timers.Begin();
@@ -123,6 +125,11 @@ namespace Botler
             }
         }
 
+        static void irc_OnModeChange(object sender, IrcEventArgs e)
+        {
+            
+        }
+
         static void irc_OnDisconnected(object sender, EventArgs e)
         {
             bool connected = false;
@@ -138,7 +145,7 @@ namespace Botler
                     JoinChannels();
                     connected = true;
                 }
-                catch (Exception fail)
+                catch (Exception)
                 {
                     Console.WriteLine("Failed to connect, trying again in 30 seconds...");
                     Thread.Sleep(30000);

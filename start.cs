@@ -156,7 +156,6 @@ namespace Botler
                 return output;
             }
             else { return Data; }
-            return "";
         }
 
         private static void MySQLConnCheck()
