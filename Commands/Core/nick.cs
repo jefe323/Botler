@@ -22,5 +22,13 @@ namespace Botler.Commands.Core
                 irc.RfcNick(args[1]);
             }
         }
+
+        public static void ident(string[] args, string Channel, string Nick, IrcClient irc)
+        {
+            if (args.Length != 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "ident <password>", Nick)); }
+            {
+                irc.SendMessage(SendType.Message, "NickServ", String.Format("identify {0}", args[1]));
+            }
+        }
     }
 }

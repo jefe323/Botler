@@ -13,7 +13,7 @@ namespace Botler
 {
     class Program
     {
-        static internal string version = "2.0";
+        static internal string version = "2.0.1";
         static internal int currentDBVersion = 1;
 
         public static IrcClient irc = new IrcClient();
@@ -121,7 +121,8 @@ namespace Botler
             }
             catch (Exception e) {
                 Console.WriteLine("I dun goofed");
-                Console.WriteLine(e.Message);
+                TextFormatting.ConsoleERROR(e.Message + "\n");
+                Console.WriteLine(e.StackTrace);
                 //Exit();
             }
         }
@@ -210,7 +211,11 @@ namespace Botler
 
         static void irc_OnQueryMessage(object sender, IrcEventArgs e)
         {
-            if (e.Data.Message.StartsWith(bot_comm_char))
+            if (e.Data.Nick == bot_op && e.Data.Message.StartsWith(String.Format("{0}ident", bot_comm_char)))
+            {
+                Botler.Commands.Core.nick.ident(e.Data.MessageArray, e.Data.Nick, e.Data.Nick, irc);
+            }
+            else if (e.Data.Message.StartsWith(bot_comm_char))
             {
                 bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
                 if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, irc); }
