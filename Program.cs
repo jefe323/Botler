@@ -76,7 +76,6 @@ namespace Botler
             irc.OnKick += new KickEventHandler(irc_OnKick);
             irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
             irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
-            irc.OnModeChange += new IrcEventHandler(irc_OnModeChange);
 
             ///////////////////////
             //Connect to irc server
@@ -123,11 +122,6 @@ namespace Botler
                 Console.WriteLine(e.Message);
                 //Exit();
             }
-        }
-
-        static void irc_OnModeChange(object sender, IrcEventArgs e)
-        {
-            
         }
 
         static void irc_OnDisconnected(object sender, EventArgs e)
@@ -190,10 +184,10 @@ namespace Botler
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
             Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
-            
+
             if (tellList.Contains(e.Data.Nick.ToLower()) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
-                showTells(e.Data.Nick);
+                showTells(e.Data.Nick.ToLower());
             }
             if (e.Data.Message.StartsWith(bot_comm_char))
             {

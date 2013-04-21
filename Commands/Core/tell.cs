@@ -62,7 +62,7 @@ namespace Botler.Commands.Core
                     TimeSpan elapsed = time.Subtract(DateTime.Parse(reader["Time"].ToString()));
                     message = String.Format("({0:%d} days, {1:%h} hours, {2:%m} minutes) Sent from {3} -- {4}", elapsed, elapsed, elapsed, reader["Nick_From"].ToString(), reader["Message"].ToString());
                     //send output
-                    irc.SendMessage(SendType.Notice, Nick, message);
+                    irc.SendMessage(SendType.Message, Nick, message);
 
                     try { Program.tellList.Remove(Nick); }
                     catch { }
@@ -75,7 +75,7 @@ namespace Botler.Commands.Core
             command.ExecuteNonQuery();
             Program.conn.Close();
 
-            if (tellCheck == false) { irc.SendMessage(SendType.Notice, Nick, String.Format("I don't have any messages for you sir")); }
+            if (tellCheck == false) { irc.SendMessage(SendType.Message, Nick, String.Format("I don't have any messages for you sir")); }
         }
     }
 }
