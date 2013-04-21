@@ -76,6 +76,8 @@ namespace Botler
             irc.OnKick += new KickEventHandler(irc_OnKick);
             irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
             irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
+            irc.OnJoin += new JoinEventHandler(irc_OnJoin);
+            irc.OnPart += new PartEventHandler(irc_OnPart);
 
             ///////////////////////
             //Connect to irc server
@@ -179,6 +181,16 @@ namespace Botler
                 string[] pArgs = { "part", e.Data.Channel };
                 Commands.Core.Channel.part.command(pArgs, e.Data.Channel, e.Data.Nick, irc);
             }
+        }
+
+        static void irc_OnJoin(object sender, JoinEventArgs e)
+        {
+            Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, String.Format("{0} has joined the channel", e.Data.Nick));
+        }
+
+        static void irc_OnPart(object sender, PartEventArgs e)
+        {
+            Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, String.Format("{0} has parted the channel", e.Data.Nick));
         }
 
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
