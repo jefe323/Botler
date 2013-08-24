@@ -140,6 +140,7 @@ namespace Botler
                     irc.Login("Botler", "Botler", 1, "Botler");
                     //irc.RfcJoin(channel);
                     JoinChannels();
+                    irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
                     connected = true;
                 }
                 catch (Exception)
@@ -352,7 +353,7 @@ namespace Botler
 
             command.CommandText = "SELECT COUNT(Nick_To) FROM tell WHERE Nick_To='" + nick.ToLower() + "'";
             try { Program.conn.Open(); }
-            catch (Exception ex) { Botler.Utilities.TextFormatting.ConsoleERROR(ex.Message + "\n"); }
+            catch (Exception ex) { Botler.Utilities.TextFormatting.ConsoleERROR(ex.Message + "\n"); Program.conn.Close(); }
             object result = command.ExecuteScalar();
             Program.conn.Close();
 
