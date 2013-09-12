@@ -13,7 +13,7 @@ namespace Botler
 {
     class Program
     {
-        static internal string version = "2.0.1";
+        static internal string version = "2.0.2";
         static internal int currentDBVersion = 1;
 
         public static IrcClient irc = new IrcClient();
@@ -115,7 +115,16 @@ namespace Botler
 
                 while (active)
                 {
-                    irc.ListenOnce();
+                    try
+                    {
+                        irc.ListenOnce();
+                    }
+                    catch (Exception e)
+                    {
+                        TextFormatting.ConsoleERROR("Listen error: " + e.Message + "\n");
+                        Console.WriteLine(e.StackTrace);
+                        continue;
+                    }
                 }
                 irc.Disconnect();
             }
@@ -201,12 +210,26 @@ namespace Botler
 
             if (tellList.Contains(e.Data.Nick.ToLower()) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
             {
-                showTells(e.Data.Nick.ToLower());
+                try
+                {
+                    showTells(e.Data.Nick.ToLower());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Show Tells error: " + ex.Message + " " + ex.StackTrace);
+                }
             }
             if (e.Data.Message.StartsWith(bot_comm_char))
             {
-                bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
-                if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc); }
+                try
+                {
+                    bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
+                    if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc); }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("blacklist error: " + ex.Message + " " + ex.StackTrace);
+                }
             }
         }
 
