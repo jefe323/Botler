@@ -9,7 +9,7 @@ namespace Botler.Utilities
         static public bool check(string Channel, string Nick, string type)
         {
             string returnValue = "";
-            if (Nick == Program.bot_op) { returnValue = "BotOP"; }
+            if (Nick == Program.GlobalVar.bot_op) { returnValue = "BotOP"; }
             else if (Nick == getChanOP(Channel)) { returnValue = "ChanOP"; }
             if (returnValue == type) { return true; }
             else if (returnValue == "BotOP" && type == "ChanOP") { return true; }
@@ -19,9 +19,9 @@ namespace Botler.Utilities
         static public string getChanOP(string Channel)
         {
             string op = "";
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT Channel,ChanOP FROM channels WHERE Channel='" + Channel.ToLower() + "'";
-            try { Program.conn.Open(); }
+            try { Program.GlobalVar.conn.Open(); }
             catch (Exception e) { Console.WriteLine(e.Message); }
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -31,7 +31,7 @@ namespace Botler.Utilities
                     op = reader["ChanOP"].ToString();
                 }
             }
-            Program.conn.Close();
+            Program.GlobalVar.conn.Close();
             return op;
         }
     }

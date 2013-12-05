@@ -8,7 +8,7 @@ namespace Botler
     {
         static public void Command(string Channel, string Nick, string Message, IrcClient irc)
         {
-            string[] args = Message.TrimEnd().Substring(Program.bot_comm_char.Length).Split(' ');
+            string[] args = Message.TrimEnd().Substring(Program.GlobalVar.bot_comm_char.Length).Split(' ');
             string cmd = args[0];
             string chanOP = Botler.Utilities.authorized.getChanOP(Channel);
 
@@ -17,7 +17,11 @@ namespace Botler
                 switch (cmd.ToLower())
                 {
                     case "info":
-                        irc.SendMessage(SendType.Message, Channel, string.Format("{0} is a C# IRC bot written by jefe323 using the SmartIRC4Net library. Version {1}. Please see http://www.jefe323.com for more information or support", Program.bot_nick, Program.version));
+                        irc.SendMessage(SendType.Message, Channel, string.Format("{0} is a C# IRC bot written by jefe323 using the SmartIRC4Net library. Version {1}. Please see http://www.jefe323.com for more information or support", Program.GlobalVar.bot_nick, Program.GlobalVar.version));
+                        break;
+                    case "uptime":
+                        TimeSpan elapsed = Program.GlobalVar.currentTime.Subtract(Program.GlobalVar.startTime);
+                        irc.SendMessage(SendType.Message, Channel, string.Format("I have been up for: {0:%d} days, {1:%h} hours, {2:%m} minutes", elapsed, elapsed, elapsed));
                         break;
                     case "ghost":
                         if (Botler.Utilities.authorized.check(Channel, Nick, "BotOP") == true) { Commands.Core.nick.ghost(args, Channel, Nick, irc); }
@@ -195,6 +199,14 @@ namespace Botler
                         break;
                     case "translate":
                         Commands.API.translate.command(args, Channel, Nick, irc);
+                        break;
+                    case "steam":
+                    case "s":
+                        Commands.Sites.steam.command(args, Channel, Nick, irc);
+                        break;
+                    case "brainfuck":
+                    case "bf":
+                        Commands.Misc.brainfuck.command(args, Channel, Nick, irc);
                         break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);

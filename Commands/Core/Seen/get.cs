@@ -9,17 +9,17 @@ namespace Botler.Commands.Core.Seen
     {
         static public void command(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length != 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "seen <nick>", Nick)); }
+            if (args.Length != 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "seen <nick>", Nick)); }
             else
             {
-                if (Nick.ToLower() == args[1].ToLower()) { irc.SendMessage(SendType.Message, Channel, String.Format("You were last seen now saying \"{0}seen {1}\" you silly goose", Program.bot_comm_char, args[1])); }
+                if (Nick.ToLower() == args[1].ToLower()) { irc.SendMessage(SendType.Message, Channel, String.Format("You were last seen now saying \"{0}seen {1}\" you silly goose", Program.GlobalVar.bot_comm_char, args[1])); }
                 else
                 {
                     DateTime time = DateTime.Now;
                     bool listCheck = false;
                     bool found = false;
                     //first check seenList
-                    List<person> response = Program.seenList.FindAll(x => x.nick == args[1].ToLower());
+                    List<person> response = Program.GlobalVar.seenList.FindAll(x => x.nick == args[1].ToLower());
                     foreach (person p in response)
                     {
                         if (response != null && (p.nick == args[1].ToLower() && p.channel == Channel))
@@ -35,9 +35,9 @@ namespace Botler.Commands.Core.Seen
                     //then check seen table
                     if (listCheck == false)
                     {
-                        MySqlCommand command = Program.conn.CreateCommand();
+                        MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                         command.CommandText = "SELECT nick,channel,time,message FROM seen WHERE nick='" + args[1].ToLower() + "' AND channel='" + Channel + "'";
-                        try { Program.conn.Open(); }
+                        try { Program.GlobalVar.conn.Open(); }
                         catch (Exception e) { Console.WriteLine(e.Message); }
                         MySqlDataReader reader = command.ExecuteReader();
                         while (reader.Read())
@@ -49,7 +49,7 @@ namespace Botler.Commands.Core.Seen
                                 found = true;
                             }
                         }
-                        Program.conn.Close();
+                        Program.GlobalVar.conn.Close();
                     }
 
                     if (found == false) { irc.SendMessage(SendType.Message, Channel, String.Format("It appears that nick hasn't talked in this channel yet")); }

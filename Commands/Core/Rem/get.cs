@@ -31,9 +31,9 @@ namespace Botler.Commands.Core.Rem
 
             if (infoCheck == false)
             {
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Trig,Channel,Message FROM rem where Trig='" + trigger + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -63,7 +63,7 @@ namespace Botler.Commands.Core.Rem
                         }
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
                 #region output
                 if (remCheck == true)
                 {

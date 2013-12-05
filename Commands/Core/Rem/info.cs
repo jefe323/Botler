@@ -12,9 +12,9 @@ namespace Botler.Commands.Core.Rem
             bool remCheck = false;
             bool global = false;
             bool lck = false;
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT Trig,Channel,Nick,Time,lck FROM rem where Trig='" + trigger + "'";
-            try { Program.conn.Open(); }
+            try { Program.GlobalVar.conn.Open(); }
             catch (Exception e) { Console.WriteLine(e.Message); }
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -31,7 +31,7 @@ namespace Botler.Commands.Core.Rem
                     lck = false;
                 }
             }
-            Program.conn.Close();
+            Program.GlobalVar.conn.Close();
             //get info
             if (remCheck == false) { irc.SendMessage(SendType.Notice, Nick, String.Format("I don't have anything stored for {0} sir", trigger)); }
         }

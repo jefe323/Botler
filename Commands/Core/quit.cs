@@ -8,7 +8,7 @@ namespace Botler.Commands.Core
         public static void exit(string Channel, string nick, IrcClient irc)
         {
             irc.SendMessage(SendType.Message, Channel, String.Format("Goodbye cruel world..."));
-            Program.active = false;
+            Program.GlobalVar.active = false;
             irc.Disconnect();
             Program.Exit();
         }

@@ -9,7 +9,7 @@ namespace Botler.Commands.Messaging
         //will probably have to lock this down, still working on best strategy to do so...
         public static void sendSpecific(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "send #<channel> <message>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "send #<channel> <message>", Nick)); }
             else
             {
                 if (args[1].StartsWith("#"))
@@ -28,7 +28,7 @@ namespace Botler.Commands.Messaging
 
         public static void sendAll(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "broadcast <message>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "broadcast <message>", Nick)); }
             else
             {
                 string msg = string.Empty;
@@ -44,16 +44,16 @@ namespace Botler.Commands.Messaging
                 }
                 //will add more later
 
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Channel FROM channels";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     irc.SendMessage(SendType.Message, reader["Channel"].ToString(), msg);
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
             }
         }
     }

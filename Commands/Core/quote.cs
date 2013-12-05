@@ -9,10 +9,10 @@ namespace Botler.Commands.Core
         //addquote <name> <message>
         static public void set(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length <= 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "addquote <nick> <message>", Nick)); }
+            if (args.Length <= 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "addquote <nick> <message>", Nick)); }
             else
             {
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
 
                 //rebuild message
                 string message = string.Empty;
@@ -23,8 +23,8 @@ namespace Botler.Commands.Core
 
                 try
                 {
-                    Program.conn.Open();
-                    command.Connection = Program.conn;
+                    Program.GlobalVar.conn.Open();
+                    command.Connection = Program.GlobalVar.conn;
                     command.CommandText = "INSERT into quote VALUES(@nick,@message)";
                     command.Prepare();
 
@@ -32,7 +32,7 @@ namespace Botler.Commands.Core
                     command.Parameters.AddWithValue("@message", message);
 
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
 
                     irc.SendMessage(SendType.Message, Channel, String.Format("I have added the quote sir, I hope it is very embarrassing"));
                 }
@@ -43,17 +43,17 @@ namespace Botler.Commands.Core
         //quote <nick>
         static public void get(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length != 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "quote <nick>", Nick)); }
+            if (args.Length != 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "quote <nick>", Nick)); }
             else
             {
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
 
                 //first get total number of quotes by nick
                 command.CommandText = "SELECT COUNT(nick) FROM quote WHERE nick='" + args[1] + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Botler.Utilities.TextFormatting.ConsoleERROR(e.Message + "\n"); }
                 object result = command.ExecuteScalar();
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
 
                 int max = Convert.ToInt32(result);
                 Console.WriteLine(max);
@@ -65,14 +65,14 @@ namespace Botler.Commands.Core
                 if (result != null && max != 0)
                 {
                     command.CommandText = "SELECT nick,message FROM quote WHERE nick='" + args[1] + "' LIMIT " + x + ",1";
-                    try { Program.conn.Open(); }
+                    try { Program.GlobalVar.conn.Open(); }
                     catch (Exception e) { Botler.Utilities.TextFormatting.ConsoleERROR(e.Message + "\n"); }
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
                         irc.SendMessage(SendType.Message, Channel, String.Format("(1/{2})<{0}> {1}", reader["nick"].ToString(), reader["message"].ToString(), max));
                     }
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                 }
                 else { irc.SendMessage(SendType.Message, Channel, String.Format("I don't seem to have any quotes for the nick sir")); }
             }

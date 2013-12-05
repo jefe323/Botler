@@ -9,15 +9,15 @@ namespace Botler.Commands.Core.Seen
         {
             DateTime timeNow = DateTime.Now;
             person newPerson = new person(Nick.ToLower(), Channel, Message, timeNow.ToString());
-            List<person> response = Program.seenList.FindAll(x => x.nick == Nick.ToLower());
+            List<person> response = Program.GlobalVar.seenList.FindAll(x => x.nick == Nick.ToLower());
             foreach (person p in response)
             {
                 if (response != null && (p.nick == newPerson.nick && p.channel == newPerson.channel))
                 {
-                    Program.seenList.Remove(p);
+                    Program.GlobalVar.seenList.Remove(p);
                 }
             }
-            Program.seenList.Add(newPerson);
+            Program.GlobalVar.seenList.Add(newPerson);
         }
     }
 }

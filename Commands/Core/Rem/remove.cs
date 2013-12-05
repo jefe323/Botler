@@ -8,7 +8,7 @@ namespace Botler.Commands.Core.Rem
     {
         static public void command(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "forget <trigger>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "forget <trigger>", Nick)); }
             else
             {
                 bool remCheck = false;
@@ -25,9 +25,9 @@ namespace Botler.Commands.Core.Rem
                 }
                 else { trigger = args[1]; }
 
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Trig,Channel,lck FROM rem where Trig='" + trigger + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -53,7 +53,7 @@ namespace Botler.Commands.Core.Rem
                         chan = "global";
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
 
                 if (lckCheck == true)
                 {
@@ -63,9 +63,9 @@ namespace Botler.Commands.Core.Rem
                 if (remCheck == true && perm == true)
                 {
                     command.CommandText = "DELETE FROM rem WHERE Trig='" + trigger + "' and Channel='" + chan + "'";
-                    Program.conn.Open();
+                    Program.GlobalVar.conn.Open();
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
 
                     irc.SendMessage(SendType.Message, Channel, String.Format("{0} was removed sir", args[1]));
                     Console.WriteLine(String.Format("{0} removed {1} from channel \"{2}\"", Nick, args[1], chan));

@@ -8,7 +8,7 @@ namespace Botler.Commands.Core.Channel
     {
         static public void setSecret(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "setSecret [#channel]", Nick)); }
+            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "setSecret [#channel]", Nick)); }
             else
             {
                 string secChan = Channel;
@@ -18,9 +18,9 @@ namespace Botler.Commands.Core.Channel
 
                 if (secChan.StartsWith("#"))
                 {
-                    MySqlCommand command = Program.conn.CreateCommand();
+                    MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                     command.CommandText = "SELECT Channel,secret FROM channels WHERE Channel='" + secChan.ToLower() + "'";
-                    try { Program.conn.Open(); }
+                    try { Program.GlobalVar.conn.Open(); }
                     catch (Exception e) { Console.WriteLine(e.Message); }
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
@@ -32,23 +32,23 @@ namespace Botler.Commands.Core.Channel
                             chanCheck = true;
                         }
                     }
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                     if (chanCheck == false) { irc.SendMessage(SendType.Message, Channel, String.Format("I don't have data for that channel sir")); }
                     if (secret == 1)
                     {
                         command.CommandText = "UPDATE channels SET secret=1 WHERE Channel='" + secChan.ToLower() + "'";
-                        Program.conn.Open();
+                        Program.GlobalVar.conn.Open();
                         command.ExecuteNonQuery();
-                        Program.conn.Close();
+                        Program.GlobalVar.conn.Close();
 
                         irc.SendMessage(SendType.Notice, Nick, String.Format("Secret has been set on {0} sir", secChan));
                     }
                     else if (secret == 2)
                     {
                         command.CommandText = "UPDATE channels SET secret=0 WHERE Channel='" + secChan.ToLower() + "'";
-                        Program.conn.Open();
+                        Program.GlobalVar.conn.Open();
                         command.ExecuteNonQuery();
-                        Program.conn.Close();
+                        Program.GlobalVar.conn.Close();
 
                         irc.SendMessage(SendType.Notice, Nick, String.Format("Secret has been removed on {0} sir", secChan));
                     }
@@ -59,12 +59,12 @@ namespace Botler.Commands.Core.Channel
 
         static public void getSecret(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length != 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "getSecret", Nick)); }
+            if (args.Length != 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "getSecret", Nick)); }
             else
             {
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Channel,secret FROM channels WHERE Channel='" + Channel.ToLower() + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -75,13 +75,13 @@ namespace Botler.Commands.Core.Channel
                         else { irc.SendMessage(SendType.Message, Channel, String.Format("{0} is currently set to Secret", Channel)); }
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
             }
         }
 
         static public void setQuiet(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "setQuiet [#channel]", Nick)); }
+            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "setQuiet [#channel]", Nick)); }
             else
             {
                 string quietChan = Channel;
@@ -91,9 +91,9 @@ namespace Botler.Commands.Core.Channel
 
                 if (quietChan.StartsWith("#"))
                 {
-                    MySqlCommand command = Program.conn.CreateCommand();
+                    MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                     command.CommandText = "SELECT Channel,Quiet FROM channels WHERE Channel='" + quietChan.ToLower() + "'";
-                    try { Program.conn.Open(); }
+                    try { Program.GlobalVar.conn.Open(); }
                     catch (Exception e) { Console.WriteLine(e.Message); }
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
@@ -105,23 +105,23 @@ namespace Botler.Commands.Core.Channel
                             chanCheck = true;
                         }
                     }
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                     if (chanCheck == false) { irc.SendMessage(SendType.Message, Channel, String.Format("I don't have data for that channel sir")); }
                     if (quiet == 1)
                     {
                         command.CommandText = "UPDATE channels SET Quiet=1 WHERE Channel='" + quietChan.ToLower() + "'";
-                        Program.conn.Open();
+                        Program.GlobalVar.conn.Open();
                         command.ExecuteNonQuery();
-                        Program.conn.Close();
+                        Program.GlobalVar.conn.Close();
 
                         irc.SendMessage(SendType.Notice, Nick, String.Format("Quiet has been set on {0} sir", quietChan));
                     }
                     else if (quiet == 2)
                     {
                         command.CommandText = "UPDATE channels SET Quiet=0 WHERE Channel='" + quietChan.ToLower() + "'";
-                        Program.conn.Open();
+                        Program.GlobalVar.conn.Open();
                         command.ExecuteNonQuery();
-                        Program.conn.Close();
+                        Program.GlobalVar.conn.Close();
 
                         irc.SendMessage(SendType.Notice, Nick, String.Format("Quiet has been removed on {0} sir", quietChan));
                     }
@@ -132,7 +132,7 @@ namespace Botler.Commands.Core.Channel
 
         static public void getQuiet(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "getQuiet [#channel]", Nick)); }
+            if (args.Length > 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "getQuiet [#channel]", Nick)); }
             else
             {
                 string quietChan = Channel;
@@ -141,9 +141,9 @@ namespace Botler.Commands.Core.Channel
 
                 if (quietChan.StartsWith("#"))
                 {
-                    MySqlCommand command = Program.conn.CreateCommand();
+                    MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                     command.CommandText = "SELECT Channel,Quiet FROM channels WHERE Channel='" + quietChan.ToLower() + "'";
-                    try { Program.conn.Open(); }
+                    try { Program.GlobalVar.conn.Open(); }
                     catch (Exception e) { Console.WriteLine(e.Message); }
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
@@ -155,7 +155,7 @@ namespace Botler.Commands.Core.Channel
                             chanCheck = true;
                         }
                     }
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                     if (chanCheck == false) { irc.SendMessage(SendType.Notice, Nick, String.Format("I don't have data on that channel sir")); }
                 }
                 else { irc.SendMessage(SendType.Message, Channel, String.Format("Please input a valid channel name sir")); }

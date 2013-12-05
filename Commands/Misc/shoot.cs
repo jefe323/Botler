@@ -11,11 +11,11 @@ namespace Botler.Commands.Misc
             {
                 irc.SendMessage(SendType.Message, Channel, string.Format("{0}, usage: $shoot <user>", Nick));
             }
-            else if (args[1].ToLower() == Program.bot_op.ToLower())
+            else if (args[1].ToLower() == Program.GlobalVar.bot_op.ToLower())
             {
                 irc.SendMessage(SendType.Message, Channel, String.Format("{0}, why would I shoot my master?", Nick));
             }
-            else if (args[1].ToLower() == Program.bot_op.ToLower())
+            else if (args[1].ToLower() == Program.GlobalVar.bot_op.ToLower())
             {
                 irc.SendMessage(SendType.Message, Channel, String.Format("{0}, why would I shoot myself?", Nick));
             }

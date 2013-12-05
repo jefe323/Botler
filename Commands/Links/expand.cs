@@ -45,7 +45,7 @@ namespace Botler.Commands.Links
                 }
                 else
                 {
-                    return String.Format("Please use {0}deadfly for adf.ly links sir", Program.bot_comm_char);
+                    return String.Format("Please use {0}deadfly for adf.ly links sir", Program.GlobalVar.bot_comm_char);
                 }
             }
         }

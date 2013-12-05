@@ -11,7 +11,7 @@ namespace Botler.Commands.Core
             DateTime tellTime = DateTime.Now;
             string message = string.Empty;
 
-            if (args.Length == 1 || args.Length == 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "tell <nick> <message>", Nick)); }
+            if (args.Length == 1 || args.Length == 2) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "tell <nick> <message>", Nick)); }
             else
             {
                 foreach (string s in args)
@@ -19,10 +19,10 @@ namespace Botler.Commands.Core
                 message = message.Substring(args[0].Length + args[1].Length + 2);
                 message = message.TrimEnd(' ');
 
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
 
-                Program.conn.Open();
-                command.Connection = Program.conn;
+                Program.GlobalVar.conn.Open();
+                command.Connection = Program.GlobalVar.conn;
                 command.CommandText = "INSERT into tell VALUES(@to,@from,@message,@time)";
                 command.Prepare();
 
@@ -32,9 +32,9 @@ namespace Botler.Commands.Core
                 command.Parameters.AddWithValue("@time", tellTime.ToString());
 
                 command.ExecuteNonQuery();
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
 
-                try { Program.tellList.Add(args[1].ToLower()); }
+                try { Program.GlobalVar.tellList.Add(args[1].ToLower()); }
                 catch { }
 
                 Console.WriteLine("{0} has left a message for {1}", Nick, args[1]);
@@ -48,9 +48,9 @@ namespace Botler.Commands.Core
             string message = string.Empty;
             bool tellCheck = false;
             
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT Nick_To,Nick_From,Message,Time FROM tell where Nick_To='" + Nick.ToLower() + "'";
-            try { Program.conn.Open(); }
+            try { Program.GlobalVar.conn.Open(); }
             catch (Exception e) { Console.WriteLine(e.Message); }
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -64,16 +64,16 @@ namespace Botler.Commands.Core
                     //send output
                     irc.SendMessage(SendType.Message, Nick, message);
 
-                    try { Program.tellList.Remove(Nick); }
+                    try { Program.GlobalVar.tellList.Remove(Nick); }
                     catch { }
                 }
             }
-            Program.conn.Close();
+            Program.GlobalVar.conn.Close();
 
             command.CommandText = "DELETE FROM tell WHERE Nick_To='" + Nick.ToLower() + "'";
-            Program.conn.Open();
+            Program.GlobalVar.conn.Open();
             command.ExecuteNonQuery();
-            Program.conn.Close();
+            Program.GlobalVar.conn.Close();
 
             if (tellCheck == false) { irc.SendMessage(SendType.Message, Nick, String.Format("I don't have any messages for you sir")); }
         }

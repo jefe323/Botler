@@ -18,6 +18,11 @@ namespace Botler.Commands.API
                 irc.SendMessage(SendType.Message, Channel, string.Format("{0}, usage: $translate <New Language> <text>", Nick));
                 irc.SendMessage(SendType.Message, Channel, string.Format("{0}, available languages:  arabic, bulgarian, chinese (Simplified), chinese (Traditional), czech, danish, dutch, english, estonian, finnish, french, german, greek, hebrew, hungarian, italian, japanese, korean, lithuanian, norwegian, polish, portuguese, romanian, russian, slovak, slovenian, spanish, swedish, thai, turkish, ukrainian", Nick));
             }
+            else if (LangFormat(args[2]) == "Error")
+            {
+                irc.SendMessage(SendType.Message, Channel, string.Format("{0}, usage: $translate <New Language> <text>", Nick));
+                irc.SendMessage(SendType.Message, Channel, string.Format("{0}, available languages:  arabic, bulgarian, chinese (Simplified), chinese (Traditional), czech, danish, dutch, english, estonian, finnish, french, german, greek, hebrew, hungarian, italian, japanese, korean, lithuanian, norwegian, polish, portuguese, romanian, russian, slovak, slovenian, spanish, swedish, thai, turkish, ukrainian", Nick));
+            }
             else
             {
                 string ClientID = getApiKey.getApi("tran_id");
@@ -35,7 +40,7 @@ namespace Botler.Commands.API
                 }
                 else
                 {
-                    irc.SendMessage(SendType.Notice, Nick, string.Format("{0} has not properly configured this command so it has been disabled sir", Program.bot_op));
+                    irc.SendMessage(SendType.Notice, Nick, string.Format("{0} has not properly configured this command so it has been disabled sir", Program.GlobalVar.bot_op));
                 }
             }
         }

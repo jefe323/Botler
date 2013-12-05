@@ -9,15 +9,15 @@ namespace Botler.Commands.Core
         //blacklist <nick> <host>
         static public void set(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length != 3) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "blacklist <nick> <host>", Nick)); }
+            if (args.Length != 3) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "blacklist <nick> <host>", Nick)); }
             else
             {
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
 
                 try
                 {
-                    Program.conn.Open();
-                    command.Connection = Program.conn;
+                    Program.GlobalVar.conn.Open();
+                    command.Connection = Program.GlobalVar.conn;
                     command.CommandText = "INSERT into blacklist VALUES(@nick,@host)";
                     command.Prepare();
 
@@ -25,7 +25,7 @@ namespace Botler.Commands.Core
                     command.Parameters.AddWithValue("@host", args[2]);
 
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
 
                     irc.SendMessage(SendType.Message, Channel, String.Format("I have added {0}@{1} to the blacklist sir, we don't want naughty people using me", args[1].ToLower(), args[2]));
                     Console.WriteLine("{0} was added to the blacklist", args[1].ToLower());

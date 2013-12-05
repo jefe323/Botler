@@ -16,7 +16,7 @@ namespace Botler.Commands.Core.Rem
             string destination = string.Empty;
             string trigger = string.Empty;
 
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "remlock <trigger>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "remlock <trigger>", Nick)); }
 
             else
             {
@@ -27,9 +27,9 @@ namespace Botler.Commands.Core.Rem
                 }
                 else { trigger = args[1]; }
 
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Trig,Channel,lck FROM rem where Trig='" + trigger + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -82,13 +82,13 @@ namespace Botler.Commands.Core.Rem
                         destination = "global";
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
                 if (remCheck == true)
                 {
                     command.CommandText = "UPDATE rem SET lck=" + newLCK + " WHERE Trig='" + trigger + "' and Channel='" + destination + "'";
-                    Program.conn.Open();
+                    Program.GlobalVar.conn.Open();
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
 
                     irc.SendMessage(SendType.Message, Channel, String.Format("{0} now has a lock status of {1}", trigger, lckType));
                     Console.WriteLine("{0} has set {1}'s lock status to {2}", Nick, trigger, lckType);
@@ -106,7 +106,7 @@ namespace Botler.Commands.Core.Rem
             string destination = string.Empty;
             string trigger = string.Empty;
 
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "global <trigger>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "global <trigger>", Nick)); }
 
             else
             {
@@ -117,9 +117,9 @@ namespace Botler.Commands.Core.Rem
                 }
                 else { trigger = args[1]; }
 
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT Trig,Channel FROM rem where Trig='" + trigger + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception e) { Console.WriteLine(e.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -145,13 +145,13 @@ namespace Botler.Commands.Core.Rem
                         destination = "global";
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
                 if (remCheck == true)
                 {
                     command.CommandText = "UPDATE rem SET Channel='" + newChannel + "' WHERE Trig='" + trigger + "' and Channel='" + destination + "'";
-                    Program.conn.Open();
+                    Program.GlobalVar.conn.Open();
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
 
                     irc.SendMessage(SendType.Message, Channel, String.Format("{0} is now set to {1}", trigger, newChannel));
                     Console.WriteLine("{0} has set {1} to channel \"{2}\"", Nick, trigger, newChannel);

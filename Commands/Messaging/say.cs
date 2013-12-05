@@ -7,7 +7,7 @@ namespace Botler.Commands.Messaging
     {
         public static void send(string[] args, string Channel, string Nick, IrcClient irc)
         {
-            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.bot_comm_char + "say <message>", Nick)); }
+            if (args.Length == 1) { irc.SendMessage(SendType.Message, Channel, String.Format("({0}) Usage: " + Program.GlobalVar.bot_comm_char + "say <message>", Nick)); }
             else
             {
                 string str = string.Empty;

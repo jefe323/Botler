@@ -13,35 +13,43 @@ namespace Botler
 {
     class Program
     {
-        static internal string version = "2.0.2";
-        static internal int currentDBVersion = 1;
+        public static class GlobalVar
+        {
+            static internal string version = "2.0.3";
+            static internal int currentDBVersion = 1;
 
-        public static IrcClient irc = new IrcClient();
-        static internal string connString;
-        static internal MySqlConnection conn;
+            public static IrcClient irc = new IrcClient();
+            static internal string connString;
+            static internal MySqlConnection conn;
 
-        static internal List<string> tellList = new List<string>();
-        static internal List<Commands.Core.Seen.person> seenList = new List<Commands.Core.Seen.person>();
+            static internal List<string> tellList = new List<string>();
+            static internal List<Commands.Core.Seen.person> seenList = new List<Commands.Core.Seen.person>();
 
-        static internal bool active = true;
+            static internal bool active = true;
 
-        //settings variables
-        /////////////////////////////////////////////
-        static internal int dbVersion = 0;
-        static internal string irc_server = "";
-        static internal int irc_port = 0;
-        static internal string irc_channel = "";
-        static internal string bot_nick = "";
-        static internal string bot_op = "";
-        static internal string bot_ident = "";
-        static internal string bot_comm_char = "";
-        static internal string mysql_server = "";
-        static internal string mysql_port = "";
-        static internal string mysql_database = "";
-        static internal string mysql_user = "";
-        static internal string mysql_password = "";
-        /////////////////////////////////////////////
+            //static internal double upTime = 0;
+            static internal DateTime startTime = DateTime.Now;
+            static internal DateTime currentTime;
 
+            /////////////////////////////////////////////
+            //settings variables
+            /////////////////////////////////////////////
+            static internal int dbVersion = 0;
+            static internal string irc_server = "";
+            static internal int irc_port = 0;
+            static internal string irc_channel = "";
+            static internal string bot_nick = "";
+            static internal string bot_op = "";
+            static internal string bot_ident = "";
+            static internal string bot_comm_char = "";
+            static internal string mysql_server = "";
+            static internal string mysql_port = "";
+            static internal string mysql_database = "";
+            static internal string mysql_user = "";
+            static internal string mysql_password = "";
+            /////////////////////////////////////////////
+        }
+        
         static void Main(string[] args)
         {
             Thread.CurrentThread.Name = "Main";
@@ -52,32 +60,32 @@ namespace Botler
             ///////////////////////
             start.StepOne();
 
-            connString = "Server=" + mysql_server + ";Port=" + mysql_port + ";Database=" + mysql_database + ";Uid=" + mysql_user + ";password=" + mysql_password + ";";
-            conn = new MySqlConnection(connString);
+            GlobalVar.connString = "Server=" + GlobalVar.mysql_server + ";Port=" + GlobalVar.mysql_port + ";Database=" + GlobalVar.mysql_database + ";Uid=" + GlobalVar.mysql_user + ";password=" + GlobalVar.mysql_password + ";";
+            GlobalVar.conn = new MySqlConnection(GlobalVar.connString);
 
-            irc.Encoding = System.Text.Encoding.UTF8;
-            irc.ActiveChannelSyncing = true;
-            irc.AutoReconnect = true;
-            irc.AutoRetry = true;
-            irc.AutoRelogin = true;
-            irc.AutoJoinOnInvite = true;
-            irc.SendDelay = 500;
+            GlobalVar.irc.Encoding = System.Text.Encoding.UTF8;
+            GlobalVar.irc.ActiveChannelSyncing = true;
+            GlobalVar.irc.AutoReconnect = true;
+            GlobalVar.irc.AutoRetry = true;
+            GlobalVar.irc.AutoRelogin = true;
+            GlobalVar.irc.AutoJoinOnInvite = true;
+            GlobalVar.irc.SendDelay = 500;
 
             start.StepTwo();
 
             ///////////////////////
             //Set up event handlers
             ///////////////////////
-            irc.OnChannelMessage += new IrcEventHandler(irc_OnChannelMessage);
-            irc.OnQueryMessage += new IrcEventHandler(irc_OnQueryMessage);
-            irc.OnInvite += new InviteEventHandler(irc_OnInvite);
-            irc.OnConnected += new EventHandler(irc_OnConnected);
-            irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(irc_OnError);
-            irc.OnKick += new KickEventHandler(irc_OnKick);
-            irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
-            irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
-            irc.OnJoin += new JoinEventHandler(irc_OnJoin);
-            irc.OnPart += new PartEventHandler(irc_OnPart);
+            GlobalVar.irc.OnChannelMessage += new IrcEventHandler(irc_OnChannelMessage);
+            GlobalVar.irc.OnQueryMessage += new IrcEventHandler(irc_OnQueryMessage);
+            GlobalVar.irc.OnInvite += new InviteEventHandler(irc_OnInvite);
+            GlobalVar.irc.OnConnected += new EventHandler(irc_OnConnected);
+            GlobalVar.irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(irc_OnError);
+            GlobalVar.irc.OnKick += new KickEventHandler(irc_OnKick);
+            GlobalVar.irc.OnNickChange += new NickChangeEventHandler(irc_OnNickChange);
+            GlobalVar.irc.OnDisconnected += new EventHandler(irc_OnDisconnected);
+            GlobalVar.irc.OnJoin += new JoinEventHandler(irc_OnJoin);
+            GlobalVar.irc.OnPart += new PartEventHandler(irc_OnPart);
 
             ///////////////////////
             //Connect to irc server
@@ -87,12 +95,12 @@ namespace Botler
             string ident = Console.ReadLine();
             if (ident == "y")
             {
-                bot_ident = Ident();
+                GlobalVar.bot_ident = Ident();
                 Console.WriteLine();
             }
-            Console.WriteLine("Connecting to " + irc_server);
+            Console.WriteLine("Connecting to " + GlobalVar.irc_server);
 
-            try { irc.Connect(irc_server, irc_port); }
+            try { GlobalVar.irc.Connect(GlobalVar.irc_server, GlobalVar.irc_port); }
             catch (Exception e)
             {
                 Console.WriteLine("Could not connect, reason: " + e.Message);
@@ -101,23 +109,23 @@ namespace Botler
 
             try
             {
-                irc.Login(bot_nick, "Botler", 1, "Botler");
+                GlobalVar.irc.Login(GlobalVar.bot_nick, "Botler", 1, "Botler");
                 //irc.RfcJoin("#Botler");
                 try { JoinChannels(); }
                 catch (Exception fail)
                 {
                     TextFormatting.ConsoleERROR(fail.Message + "\n");
                 }
-                irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
+                GlobalVar.irc.SendMessage(SendType.Message, "NickServ", "identify " + GlobalVar.bot_ident);
                 Utilities.timers.Begin();
 
                 new Thread(new ThreadStart(ReadCommands)).Start();
 
-                while (active)
+                while (GlobalVar.active)
                 {
                     try
                     {
-                        irc.ListenOnce();
+                        GlobalVar.irc.ListenOnce();
                     }
                     catch (Exception e)
                     {
@@ -126,7 +134,7 @@ namespace Botler
                         continue;
                     }
                 }
-                irc.Disconnect();
+                GlobalVar.irc.Disconnect();
             }
             catch (Exception e) {
                 Console.WriteLine("I dun goofed");
@@ -144,12 +152,17 @@ namespace Botler
             while (connected == false)
             {
                 try 
-                { 
-                    irc.Connect(irc_server, irc_port);
-                    irc.Login("Botler", "Botler", 1, "Botler");
+                {
+                    GlobalVar.irc.Connect(GlobalVar.irc_server, GlobalVar.irc_port);
+                    GlobalVar.irc.Login("Botler", "Botler", 1, "Botler");
                     //irc.RfcJoin(channel);
                     JoinChannels();
-                    irc.SendMessage(SendType.Message, "NickServ", "identify " + bot_ident);
+                    //ghost
+                    GlobalVar.irc.SendMessage(SendType.Message, "NickServ", "ghost " + GlobalVar.bot_nick + " " + GlobalVar.bot_ident); 
+                    //change nick
+                    GlobalVar.irc.RfcNick(GlobalVar.bot_nick);
+                    //ident again
+                    GlobalVar.irc.SendMessage(SendType.Message, "NickServ", "identify " + GlobalVar.bot_ident);
                     connected = true;
                 }
                 catch (Exception)
@@ -176,7 +189,7 @@ namespace Botler
         {
             //make equal to .join command
             string[] jArgs = { "join", e.Data.Channel };
-            Commands.Core.Channel.join.command(jArgs, e.Data.Channel, e.Data.Nick, irc);
+            Commands.Core.Channel.join.command(jArgs, e.Data.Channel, e.Data.Nick, GlobalVar.irc);
         }
 
         static void irc_OnError(object sender, Meebey.SmartIrc4net.ErrorEventArgs e)
@@ -186,11 +199,11 @@ namespace Botler
 
         static void irc_OnKick(object sender, KickEventArgs e)
         {
-            if (e.Whom == bot_nick)
+            if (e.Whom == GlobalVar.bot_nick)
             {
                 //make same as part
                 string[] pArgs = { "part", e.Data.Channel };
-                Commands.Core.Channel.part.command(pArgs, e.Data.Channel, e.Data.Nick, irc);
+                Commands.Core.Channel.part.command(pArgs, e.Data.Channel, e.Data.Nick, GlobalVar.irc);
             }
         }
 
@@ -208,7 +221,7 @@ namespace Botler
         {
             Commands.Core.Seen.set.go(e.Data.Nick, e.Data.Channel, e.Data.Message);
 
-            if (tellList.Contains(e.Data.Nick.ToLower()) && !e.Data.Message.StartsWith(String.Format("{0}showtell", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", bot_comm_char)))
+            if (GlobalVar.tellList.Contains(e.Data.Nick.ToLower()) && !e.Data.Message.StartsWith(String.Format("{0}showtell", GlobalVar.bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}showtells", GlobalVar.bot_comm_char)) && !e.Data.Message.StartsWith(String.Format("{0}st", GlobalVar.bot_comm_char)))
             {
                 try
                 {
@@ -219,12 +232,12 @@ namespace Botler
                     Console.WriteLine("Show Tells error: " + ex.Message + " " + ex.StackTrace);
                 }
             }
-            if (e.Data.Message.StartsWith(bot_comm_char))
+            if (e.Data.Message.StartsWith(GlobalVar.bot_comm_char))
             {
                 try
                 {
                     bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
-                    if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, irc); }
+                    if (bl == false || e.Data.Nick == GlobalVar.bot_op) { run.Command(e.Data.Channel, e.Data.Nick, e.Data.Message, GlobalVar.irc); }
                 }
                 catch (Exception ex)
                 {
@@ -235,14 +248,14 @@ namespace Botler
 
         static void irc_OnQueryMessage(object sender, IrcEventArgs e)
         {
-            if (e.Data.Nick == bot_op && e.Data.Message.StartsWith(String.Format("{0}ident", bot_comm_char)))
+            if (e.Data.Nick == GlobalVar.bot_op && e.Data.Message.StartsWith(String.Format("{0}ident", GlobalVar.bot_comm_char)))
             {
-                Botler.Commands.Core.nick.ident(e.Data.MessageArray, e.Data.Nick, e.Data.Nick, irc);
+                Botler.Commands.Core.nick.ident(e.Data.MessageArray, e.Data.Nick, e.Data.Nick, GlobalVar.irc);
             }
-            else if (e.Data.Message.StartsWith(bot_comm_char))
+            else if (e.Data.Message.StartsWith(GlobalVar.bot_comm_char))
             {
                 bool bl = blacklist(e.Data.Nick.ToLower(), e.Data.Host);
-                if (bl == false || e.Data.Nick == bot_op) { run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, irc); }
+                if (bl == false || e.Data.Nick == GlobalVar.bot_op) { run.Command(e.Data.Nick, e.Data.Nick, e.Data.Message, GlobalVar.irc); }
             }
         }
 
@@ -260,7 +273,7 @@ namespace Botler
                 }
                 else
                 {
-                    irc.WriteLine(cmd);
+                    GlobalVar.irc.WriteLine(cmd);
                 }
             }
         }
@@ -268,33 +281,33 @@ namespace Botler
         public static void Exit()
         {
             Console.WriteLine("Now Exiting...");
-            active = false;
+            GlobalVar.active = false;
             Environment.Exit(0);
         }
 
         private static void JoinChannels()
         {
             bool chanCheck = false;
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT Channel,ChanOP,SuperUsers,Quiet,secret FROM channels";
-            try { Program.conn.Open(); }
+            try { GlobalVar.conn.Open(); }
             catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
             MySqlDataReader read = command.ExecuteReader();
             while (read.Read())
             {
-                if (read["Channel"].ToString() == irc_channel) { chanCheck = true; }
+                if (read["Channel"].ToString() == GlobalVar.irc_channel) { chanCheck = true; }
             }
-            Program.conn.Close();
+            GlobalVar.conn.Close();
             //default channel not found in database, so we'll need to add it
             if (chanCheck == false)
             {
-                string[] jArgs = { "join", irc_channel };
-                Commands.Core.Channel.join.command(jArgs, irc_channel, bot_op, irc);
+                string[] jArgs = { "join", GlobalVar.irc_channel };
+                Commands.Core.Channel.join.command(jArgs, GlobalVar.irc_channel, GlobalVar.bot_op, GlobalVar.irc);
             }
-            
-            command = Program.conn.CreateCommand();
+
+            command = GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT Channel,ChanOP,SuperUsers,Quiet,secret FROM channels";
-            try { Program.conn.Open(); }
+            try { GlobalVar.conn.Open(); }
             catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
             MySqlDataReader reader = command.ExecuteReader();
             Console.WriteLine("Joining the following channels:");
@@ -313,9 +326,9 @@ namespace Botler
                 TextFormatting.ConsoleWhite(secret);
                 Console.Write(" / Quiet: ");
                 TextFormatting.ConsoleWhite(quiet + "\n");
-                irc.RfcJoin(reader["Channel"].ToString());
+                GlobalVar.irc.RfcJoin(reader["Channel"].ToString());
             }
-            Program.conn.Close();
+            GlobalVar.conn.Close();
         }
 
         public static string Ident()
@@ -348,9 +361,9 @@ namespace Botler
         private static bool blacklist(string nick, string host)
         {
             bool returnValue = false;
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = GlobalVar.conn.CreateCommand();
             command.CommandText = "SELECT nick,host FROM blacklist WHERE nick='" + nick + "'";
-            try { conn.Open(); }
+            try { GlobalVar.conn.Open(); }
             catch (Exception e) { TextFormatting.ConsoleERROR(e.Message + "\n"); }
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -364,7 +377,7 @@ namespace Botler
                     returnValue = true;
                 }
             }
-            conn.Close();
+            GlobalVar.conn.Close();
             return returnValue;
         }
 
@@ -372,13 +385,13 @@ namespace Botler
         {
             DateTime time = DateTime.Now;
             string message = string.Empty;
-            MySqlCommand command = Program.conn.CreateCommand();
+            MySqlCommand command = GlobalVar.conn.CreateCommand();
 
             command.CommandText = "SELECT COUNT(Nick_To) FROM tell WHERE Nick_To='" + nick.ToLower() + "'";
-            try { Program.conn.Open(); }
-            catch (Exception ex) { Botler.Utilities.TextFormatting.ConsoleERROR(ex.Message + "\n"); Program.conn.Close(); }
+            try { GlobalVar.conn.Open(); }
+            catch (Exception ex) { Botler.Utilities.TextFormatting.ConsoleERROR(ex.Message + "\n"); GlobalVar.conn.Close(); }
             object result = command.ExecuteScalar();
-            Program.conn.Close();
+            GlobalVar.conn.Close();
 
             int max = Convert.ToInt32(result);
 
@@ -386,7 +399,7 @@ namespace Botler
             if (result != null && max != 0)
             {
                 command.CommandText = "SELECT Nick_To,Nick_From,Message,Time FROM tell WHERE Nick_To='" + nick.ToLower() + "' LIMIT 0,1";
-                try { Program.conn.Open(); }
+                try { GlobalVar.conn.Open(); }
                 catch (Exception e) { Botler.Utilities.TextFormatting.ConsoleERROR(e.Message + "\n"); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -395,18 +408,23 @@ namespace Botler
                     TimeSpan elapsed = time.Subtract(DateTime.Parse(reader["Time"].ToString()));
                     message = String.Format("*{5}*({0:%d} days, {1:%h} hours, {2:%m} minutes) Sent from {3} -- {4}", elapsed, elapsed, elapsed, reader["Nick_From"].ToString(), reader["Message"].ToString(), nick);
                     //send output
-                    irc.SendMessage(SendType.Message, nick, message);
+                    GlobalVar.irc.SendMessage(SendType.Message, nick, message);
+                    //remove old tell
+                    command.CommandText = "DELETE FROM tell WHERE Nick_To='" + reader["Nick_To"] + "' AND Time='" + reader["Time"] + "'";
+                    GlobalVar.conn.Open();
+                    command.ExecuteNonQuery();
+                    GlobalVar.conn.Close();
                 }
-                Program.conn.Close();
+                GlobalVar.conn.Close();
             }
             //else { irc.SendMessage(SendType.Notice, nick, String.Format("I don't seem to have any quotes for the nick sir")); }
 
             if (max > 1)
             {
-                irc.SendMessage(SendType.Message, nick, String.Format("You ({2}) have {0} more messages waiting for you sir, please use {1}showtell to view them", (max-1), bot_comm_char, nick));
+                GlobalVar.irc.SendMessage(SendType.Message, nick, String.Format("You ({2}) have {0} more messages waiting for you sir, please use {1}showtell to view them", (max - 1), GlobalVar.bot_comm_char, nick));
             }
-            
-            try { tellList.Remove(nick); }
+
+            try { GlobalVar.tellList.Remove(nick); }
             catch { }
         }
     }

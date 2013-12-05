@@ -11,17 +11,26 @@ namespace Botler.Utilities
             //run every 5 minutes
             var seenTimer = new Timer { Interval = 300000, Enabled = true };
             seenTimer.Elapsed += new ElapsedEventHandler(seenTimer_Elapsed);
+
+            //run every 1 minute
+            var upTimer = new Timer { Interval = 60000, Enabled = true };
+            upTimer.Elapsed += new ElapsedEventHandler(upTimer_Elapsed);
+        }
+
+        static void upTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Program.GlobalVar.currentTime = DateTime.Now;
         }
 
         static void seenTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (Commands.Core.Seen.person p in Program.seenList)
+            foreach (Commands.Core.Seen.person p in Program.GlobalVar.seenList)
             {
                 //see if p.nick is already in the database
                 bool check = false;
-                MySqlCommand command = Program.conn.CreateCommand();
+                MySqlCommand command = Program.GlobalVar.conn.CreateCommand();
                 command.CommandText = "SELECT nick,channel FROM seen where nick='" + p.nick + "' AND channel ='" + p.channel + "'";
-                try { Program.conn.Open(); }
+                try { Program.GlobalVar.conn.Open(); }
                 catch (Exception d) { Console.WriteLine(d.Message); }
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -31,12 +40,12 @@ namespace Botler.Utilities
                         check = true;
                     }
                 }
-                Program.conn.Close();
+                Program.GlobalVar.conn.Close();
                 //if is is, then update it
                 if (check == true)
                 {
-                    Program.conn.Open();
-                    command.Connection = Program.conn;
+                    Program.GlobalVar.conn.Open();
+                    command.Connection = Program.GlobalVar.conn;
                     command.CommandText = "UPDATE seen SET time=@time, message=@message WHERE nick='" + p.nick + "' AND channel='" + p.channel + "'";
                     command.Prepare();
 
@@ -44,13 +53,13 @@ namespace Botler.Utilities
                     command.Parameters.AddWithValue("@message", p.message);
 
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                 }
                 //if not, then add it
                 else
                 {
-                    Program.conn.Open();
-                    command.Connection = Program.conn;
+                    Program.GlobalVar.conn.Open();
+                    command.Connection = Program.GlobalVar.conn;
                     command.CommandText = "INSERT into seen VALUES(@nick, @channel, @time, @message)";
                     command.Prepare();
 
@@ -61,10 +70,10 @@ namespace Botler.Utilities
 
                     
                     command.ExecuteNonQuery();
-                    Program.conn.Close();
+                    Program.GlobalVar.conn.Close();
                 }
             }
-            Program.seenList.Clear();
+            Program.GlobalVar.seenList.Clear();
         }
     }
 }
