@@ -410,10 +410,10 @@ namespace Botler
                     //send output
                     GlobalVar.irc.SendMessage(SendType.Message, nick, message);
                     //remove old tell
-                    command.CommandText = "DELETE FROM tell WHERE Nick_To='" + reader["Nick_To"] + "' AND Time='" + reader["Time"] + "'";
-                    GlobalVar.conn.Open();
-                    command.ExecuteNonQuery();
-                    GlobalVar.conn.Close();
+                    //command.CommandText = "DELETE FROM tell WHERE Nick_To='" + reader["Nick_To"] + "' AND Time='" + reader["Time"] + "'";
+                    //GlobalVar.conn.Open();
+                    //command.ExecuteNonQuery();
+                    //GlobalVar.conn.Close();
                 }
                 GlobalVar.conn.Close();
             }
