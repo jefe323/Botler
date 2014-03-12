@@ -206,7 +206,7 @@ namespace Botler
                         break;
                     case "brainfuck":
                     case "bf":
-                        Commands.Misc.brainfuck.command(args, Channel, Nick, irc);
+                        //Commands.Misc.brainfuck.command(args, Channel, Nick, irc);
                         break;
                     default:
                         Commands.Core.Rem.get.command(args, Channel, Nick, irc);
