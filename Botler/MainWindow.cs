@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Botler
 {
@@ -22,12 +24,27 @@ namespace Botler
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            //Create necessary directories if they don't already exist
+            Directory.CreateDirectory("Data");
+            Directory.CreateDirectory("Data/Logs");
+            Directory.CreateDirectory("Data/Rems");
+            Directory.CreateDirectory("Data/Seen");
+            Directory.CreateDirectory("Plugins");
+
+            //Create necessary files if they don't already exist
+            //Channels.xml
+            if (!File.Exists("Data/Channels.xml")) { CreateChannelFile(); }
+            //Tells.xml
+            if (!File.Exists("Data/Tells.xml")) { CreateTellsFile(); }
+            //blacklist?
+            //help?
+            //alias?
+            //stats?
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            RunBot = Task.Factory.StartNew(() => bot.Start("irc.cultofjefe.com", 6667, this));
+            RunBot = Task.Factory.StartNew(() => Bot.Start(this));
             button1.Enabled = false;
         }
 
@@ -35,6 +52,38 @@ namespace Botler
         {
             Settings set = new Settings();
             set.Show();
+        }
+
+        static private void CreateChannelFile()
+        {
+            XDocument xDoc = new XDocument(
+                new XDeclaration("1.0", "UTF-8", null),
+                new XElement("Channels",
+                    new XElement("Channel",
+                        new XAttribute("Name", "#Tavern"),
+                        new XElement("Secret", false),
+                        new XElement("Quiet", false),
+                        new XElement("WelcomeMessage", ""),
+                        new XElement("Rules", ""),
+                        new XElement("InvitedBy", "jefe")
+            )));
+
+            xDoc.Save("Data/Channels.xml");
+        }
+
+        static private void CreateTellsFile()
+        {
+            XDocument xDoc = new XDocument(
+                new XDeclaration("1.0", "UTF-8", null),
+                new XElement("Tells",
+                    new XElement("Tell",
+                        new XAttribute("To", "jefe_"),
+                        new XAttribute("From", "OtherJefe"),
+                        new XElement("Message", "This is a test message"),
+                        new XElement("TimeSent", "1/1/2014 11:11:11")
+            )));
+
+            xDoc.Save("Data/Tells.xml");
         }
     }
 }

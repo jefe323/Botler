@@ -6,30 +6,45 @@ using Meebey.SmartIrc4net;
 using System.Threading;
 using System.Drawing;
 using System.Configuration;
+using System.Xml.Linq;
+using System.Threading.Tasks;
 
 namespace Botler
 {
-    class bot
+    class Bot
     {
         private static IrcClient irc = new IrcClient();
         private static MainWindow form;
         private static bool active;
+
+        private static string ircServer;
+        private static int ircPort;
+        private static string ircServerPassword;
+        private static string botNick;
+        private static string botOp;
         
-        public static void Start(string address, int port, MainWindow fm)
+        public static void Start(MainWindow fm)
         {
             //Settings
-            string ircServer = ConfigurationManager.AppSettings["IRC_Server_Address"];
-            int ircPort = Convert.ToInt32(ConfigurationManager.AppSettings["IRC_Server_Port"]);
-            string ircServerPassword = ConfigurationManager.AppSettings["IRC_Server_Password"];
-            string botNick = ConfigurationManager.AppSettings["Bot_Nick"];
+            ircServer = ConfigurationManager.AppSettings["IRC_Server_Address"];
+            ircPort = Convert.ToInt32(ConfigurationManager.AppSettings["IRC_Server_Port"]);
+            ircServerPassword = ConfigurationManager.AppSettings["IRC_Server_Password"];
+            botNick = ConfigurationManager.AppSettings["Bot_Nick"];
+            botOp = ConfigurationManager.AppSettings["Bot_Operator"];
             
             form = fm;
             active = true;
 
-            Thread.CurrentThread.Name = "Main";
+            
 
+            //misc settings
             irc.Encoding = System.Text.Encoding.UTF8;
             irc.ActiveChannelSyncing = true;
+            irc.AutoReconnect = true;
+            irc.AutoRetry = true;
+            irc.AutoRelogin = true;
+            irc.AutoJoinOnInvite = true;
+            irc.SendDelay = 500;
 
             #region proxy connection settings
             if (ConfigurationManager.AppSettings["Proxy_Address"] != "" && ConfigurationManager.AppSettings["Proxy_Address"] != null)
@@ -60,11 +75,21 @@ namespace Botler
             }
             #endregion
 
+            //event handlers
             irc.OnChannelMessage += irc_OnChannelMessage;
             irc.OnQueryMessage += irc_OnQueryMessage;
+            irc.OnInvite += irc_OnInvite;
+            irc.OnConnected += irc_OnConnected;
             irc.OnError += irc_OnError;
+            irc.OnKick += irc_OnKick;
+            irc.OnNickChange += irc_OnNickChange;
+            irc.OnDisconnected += irc_OnDisconnected;
+            irc.OnJoin += irc_OnJoin;
+            irc.OnPart += irc_OnPart;
             irc.OnRawMessage += irc_OnRawMessage;
             irc.OnCtcpRequest += irc_OnCtcpRequest;
+
+
 
             fm.OutputTextBox.SelectionBackColor = Color.Green;
             fm.OutputTextBox.SelectionColor = Color.White;
@@ -73,17 +98,22 @@ namespace Botler
 
             fm.OutputTextBox.SelectionBackColor = Color.Transparent;
             fm.OutputTextBox.SelectionColor = Color.Black;
-            try 
-            { 
-                irc.Connect(ircServer, ircPort);
-                fm.OutputTextBox.AppendText(string.Format("Connected to {0}!\n", ircServer)); 
+
+            Connect();
+        }
+
+        private static void Connect()
+        {
+            try
+            {
+                irc.Connect(ircServer, ircPort);                
             }
-            catch (Exception e) { fm.OutputTextBox.AppendText("Connecting Error: " + e.Message + "\n"); }
+            catch (Exception e) { form.OutputTextBox.AppendText("Connecting Error: " + e.Message + "\n"); }
 
             try
             {
                 irc.Login(botNick, "Botler", 0, "Botler", ircServerPassword);
-                irc.RfcJoin("#Tavern");
+                joinChannels();
                 try
                 {
                     while (active)
@@ -91,9 +121,58 @@ namespace Botler
                         irc.ListenOnce();
                     }
                 }
-                catch (Exception e) { fm.OutputTextBox.AppendText("Listen Error Error: " + e.Message + "\n"); }
+                catch (Exception e) { form.OutputTextBox.AppendText("Listen Error Error: " + e.Message + "\n"); }
             }
-            catch (Exception e) { fm.OutputTextBox.AppendText("Channel Join Error: " + e.Message + "\n"); }
+            catch (Exception e) { form.OutputTextBox.AppendText("Channel Join Error: " + e.Message + "\n"); }
+        }
+
+        private static void joinChannels()
+        {
+            XDocument xDoc = XDocument.Load("Data/Channels.xml");
+            var channels = from element in xDoc.Elements("Channels").Elements("Channel")
+                           select element;
+
+            foreach (var c in channels)
+            {
+                var t = Task.Factory.StartNew(() => irc.RfcJoin(c.Attribute("Name").Value));
+                //display message in logger
+            }
+        }
+
+        static void irc_OnPart(object sender, PartEventArgs e)
+        {
+            //update seen
+        }
+
+        static void irc_OnJoin(object sender, JoinEventArgs e)
+        {
+            //update seen
+            //display welcome message for channel if configured
+        }
+
+        static void irc_OnDisconnected(object sender, EventArgs e)
+        {
+            //need to reconnect
+        }
+
+        static void irc_OnNickChange(object sender, NickChangeEventArgs e)
+        {
+            //check tells
+        }
+
+        static void irc_OnKick(object sender, KickEventArgs e)
+        {
+            //same as part
+        }
+
+        static void irc_OnConnected(object sender, EventArgs e)
+        {
+            form.OutputTextBox.AppendText(string.Format("Connected to {0}!\n", ircServer));
+        }
+
+        static void irc_OnInvite(object sender, InviteEventArgs e)
+        {
+            //join channel (no more join command, invite only)
         }
 
         static void irc_OnCtcpRequest(object sender, CtcpEventArgs e)
@@ -111,17 +190,17 @@ namespace Botler
 
         static void irc_OnRawMessage(object sender, IrcEventArgs e)
         {
-            //throw new NotImplementedException();
+            //display in logger
         }
 
         static void irc_OnError(object sender, ErrorEventArgs e)
         {
-            //throw new NotImplementedException();
+            //display in logger
         }
 
         static void irc_OnQueryMessage(object sender, IrcEventArgs e)
         {
-            //throw new NotImplementedException();
+            //same as channel message, just a different destination
         }
 
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
