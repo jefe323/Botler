@@ -22,20 +22,40 @@ namespace Botler
         private static string ircServerPassword;
         private static string botNick;
         private static string botOp;
+        private static string botIdent;
         
         public static void Start(MainWindow fm)
         {
             //Settings
             ircServer = ConfigurationManager.AppSettings["IRC_Server_Address"];
             ircPort = Convert.ToInt32(ConfigurationManager.AppSettings["IRC_Server_Port"]);
-            ircServerPassword = ConfigurationManager.AppSettings["IRC_Server_Password"];
+            if (ConfigurationManager.AppSettings["IRC_Server_Password"].Length >= 1)
+            {
+                try
+                {
+                    ircServerPassword = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["IRC_Server_Password"]);
+                }
+                catch { }
+            }
+            else { ircServerPassword = ""; }
             botNick = ConfigurationManager.AppSettings["Bot_Nick"];
             botOp = ConfigurationManager.AppSettings["Bot_Operator"];
+            if (ConfigurationManager.AppSettings["Bot_Ident_Password"].Length >= 1)
+            {
+                try
+                {
+                    botIdent = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Bot_Ident_Password"]);
+                }
+                catch { }
+            }
+            else { botIdent = ""; }
             
             form = fm;
             active = true;
 
-            
+            //to test crypt/decrypt functionality...
+            form.OutputTextBox.AppendText(botIdent + "\n");
+            //form.OutputTextBox.AppendText(ircServerPassword + "\n");
 
             //misc settings
             irc.Encoding = System.Text.Encoding.UTF8;
@@ -52,7 +72,15 @@ namespace Botler
                 irc.ProxyHost = ConfigurationManager.AppSettings["Proxy_Address"];
                 irc.ProxyPort = Convert.ToInt32(ConfigurationManager.AppSettings["Proxy_Port"]);
                 irc.ProxyUsername = ConfigurationManager.AppSettings["Proxy_User"];
-                irc.ProxyPassword = ConfigurationManager.AppSettings["Proxy_Password"];
+                if (ConfigurationManager.AppSettings["Proxy_Password"].Length >= 1)
+                {
+                    try
+                    {
+                        irc.ProxyPassword = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Proxy_Password"]);
+                    }
+                    catch { }
+                }
+                else { irc.ProxyPassword = ""; }
                 string pType = ConfigurationManager.AppSettings["Proxy_Type"];
                 switch (pType.ToLower())
                 {

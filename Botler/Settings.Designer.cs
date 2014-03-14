@@ -70,6 +70,7 @@
             this.SaveButton.Text = "Save";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            this.SaveButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ServerAddressBox
             // 
@@ -77,6 +78,7 @@
             this.ServerAddressBox.Name = "ServerAddressBox";
             this.ServerAddressBox.Size = new System.Drawing.Size(100, 20);
             this.ServerAddressBox.TabIndex = 1;
+            this.ServerAddressBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ServerPortBox
             // 
@@ -84,13 +86,18 @@
             this.ServerPortBox.Name = "ServerPortBox";
             this.ServerPortBox.Size = new System.Drawing.Size(100, 20);
             this.ServerPortBox.TabIndex = 2;
+            this.ServerPortBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ServerPasswordBox
             // 
             this.ServerPasswordBox.Location = new System.Drawing.Point(114, 77);
             this.ServerPasswordBox.Name = "ServerPasswordBox";
+            this.ServerPasswordBox.PasswordChar = '*';
+            this.ServerPasswordBox.ShortcutsEnabled = false;
             this.ServerPasswordBox.Size = new System.Drawing.Size(100, 20);
             this.ServerPasswordBox.TabIndex = 3;
+            this.ServerPasswordBox.UseSystemPasswordChar = true;
+            this.ServerPasswordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // BotNickBox
             // 
@@ -98,15 +105,18 @@
             this.BotNickBox.Name = "BotNickBox";
             this.BotNickBox.Size = new System.Drawing.Size(100, 20);
             this.BotNickBox.TabIndex = 4;
+            this.BotNickBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // BotIdentBox
             // 
             this.BotIdentBox.Location = new System.Drawing.Point(114, 45);
             this.BotIdentBox.Name = "BotIdentBox";
             this.BotIdentBox.PasswordChar = '*';
+            this.BotIdentBox.ShortcutsEnabled = false;
             this.BotIdentBox.Size = new System.Drawing.Size(100, 20);
             this.BotIdentBox.TabIndex = 5;
             this.BotIdentBox.UseSystemPasswordChar = true;
+            this.BotIdentBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // CommandSymbolBox
             // 
@@ -114,6 +124,7 @@
             this.CommandSymbolBox.Name = "CommandSymbolBox";
             this.CommandSymbolBox.Size = new System.Drawing.Size(100, 20);
             this.CommandSymbolBox.TabIndex = 6;
+            this.CommandSymbolBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // BotOpBox
             // 
@@ -121,6 +132,7 @@
             this.BotOpBox.Name = "BotOpBox";
             this.BotOpBox.Size = new System.Drawing.Size(100, 20);
             this.BotOpBox.TabIndex = 7;
+            this.BotOpBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // label1
             // 
@@ -259,6 +271,7 @@
             this.ProxyTypeBox.Name = "ProxyTypeBox";
             this.ProxyTypeBox.Size = new System.Drawing.Size(100, 21);
             this.ProxyTypeBox.TabIndex = 8;
+            this.ProxyTypeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // label11
             // 
@@ -301,9 +314,11 @@
             this.ProxyPasswordBox.Location = new System.Drawing.Point(98, 103);
             this.ProxyPasswordBox.Name = "ProxyPasswordBox";
             this.ProxyPasswordBox.PasswordChar = '*';
+            this.ProxyPasswordBox.ShortcutsEnabled = false;
             this.ProxyPasswordBox.Size = new System.Drawing.Size(100, 20);
             this.ProxyPasswordBox.TabIndex = 3;
             this.ProxyPasswordBox.UseSystemPasswordChar = true;
+            this.ProxyPasswordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ProxyUserBox
             // 
@@ -311,6 +326,7 @@
             this.ProxyUserBox.Name = "ProxyUserBox";
             this.ProxyUserBox.Size = new System.Drawing.Size(100, 20);
             this.ProxyUserBox.TabIndex = 2;
+            this.ProxyUserBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ProxyPortBox
             // 
@@ -318,6 +334,7 @@
             this.ProxyPortBox.Name = "ProxyPortBox";
             this.ProxyPortBox.Size = new System.Drawing.Size(100, 20);
             this.ProxyPortBox.TabIndex = 1;
+            this.ProxyPortBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // ProxyAddressBox
             // 
@@ -325,6 +342,7 @@
             this.ProxyAddressBox.Name = "ProxyAddressBox";
             this.ProxyAddressBox.Size = new System.Drawing.Size(100, 20);
             this.ProxyAddressBox.TabIndex = 0;
+            this.ProxyAddressBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyPressDown);
             // 
             // Settings
             // 

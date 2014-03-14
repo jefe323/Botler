@@ -23,17 +23,39 @@ namespace Botler
             //load values from config file
             this.ServerAddressBox.Text = ConfigurationManager.AppSettings["IRC_Server_Address"];
             this.ServerPortBox.Text = ConfigurationManager.AppSettings["IRC_Server_Port"];
-            this.ServerPasswordBox.Text = ConfigurationManager.AppSettings["IRC_Server_Password"];
+            if (ConfigurationManager.AppSettings["IRC_Server_Password"] != "" || ConfigurationManager.AppSettings["IRC_Server_Password"] != null)
+            {
+                try
+                {
+                    this.ServerPasswordBox.Text = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["IRC_Server_Password"]);
+                }
+                catch { }
+            }
+            
 
             this.BotNickBox.Text = ConfigurationManager.AppSettings["Bot_Nick"];
-            this.BotIdentBox.Text = ConfigurationManager.AppSettings["Bot_Ident_Password"];
+            if (ConfigurationManager.AppSettings["Bot_Ident_Password"] != "" || ConfigurationManager.AppSettings["Bot_Ident_Password"] != null)
+            {
+                try
+                {
+                    this.BotIdentBox.Text = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Bot_Ident_Password"]);
+                }
+                catch { }
+            }            
             this.CommandSymbolBox.Text = ConfigurationManager.AppSettings["Bot_Command_Symbol"];
             this.BotOpBox.Text = ConfigurationManager.AppSettings["Bot_Operator"];
 
             this.ProxyAddressBox.Text = ConfigurationManager.AppSettings["Proxy_Address"];
             this.ProxyPortBox.Text = ConfigurationManager.AppSettings["Proxy_Port"];
             this.ProxyUserBox.Text = ConfigurationManager.AppSettings["Proxy_User"];
-            this.ProxyPasswordBox.Text = ConfigurationManager.AppSettings["Proxy_Password"];
+            if (ConfigurationManager.AppSettings["Proxy_Password"] != "" || ConfigurationManager.AppSettings["Proxy_Password"] != null)
+            {
+                try
+                {
+                    this.ProxyPasswordBox.Text = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Proxy_Password"]);
+                }
+                catch { }
+            }            
             //Proxy Type Selection
             string pType = ConfigurationManager.AppSettings["Proxy_Type"];
             switch (pType.ToLower())
@@ -79,7 +101,15 @@ namespace Botler
                             }
                             if (node.Attributes[0].Value.Equals("IRC_Server_Password"))
                             {
-                                node.Attributes[1].Value = this.ServerPasswordBox.Text;
+                                if (this.ServerPasswordBox.Text.Length >= 1)
+                                {
+                                    try
+                                    {
+                                        string cryptedServerPW = Utilities.Crypto.Crypt(this.ServerPasswordBox.Text);
+                                        node.Attributes[1].Value = cryptedServerPW;
+                                    }
+                                    catch { }
+                                }
                             }
 
                             if (node.Attributes[0].Value.Equals("Bot_Nick"))
@@ -88,7 +118,15 @@ namespace Botler
                             }
                             if (node.Attributes[0].Value.Equals("Bot_Ident_Password"))
                             {
-                                node.Attributes[1].Value = this.BotIdentBox.Text;
+                                if (this.BotIdentBox.Text.Length >= 1)
+                                {
+                                    try
+                                    {
+                                        string cryptedIdentPW = Utilities.Crypto.Crypt(this.BotIdentBox.Text);
+                                        node.Attributes[1].Value = cryptedIdentPW;
+                                    }
+                                    catch { }
+                                }
                             }
                             if (node.Attributes[0].Value.Equals("Bot_Command_Symbol"))
                             {
@@ -113,7 +151,15 @@ namespace Botler
                             }
                             if (node.Attributes[0].Value.Equals("Proxy_Password"))
                             {
-                                node.Attributes[1].Value = this.ProxyPasswordBox.Text;
+                                if (this.ProxyPasswordBox.Text.Length >= 1)
+                                {
+                                    try
+                                    {
+                                        string cryptedProxyPW = Utilities.Crypto.Crypt(this.ProxyPasswordBox.Text);
+                                        node.Attributes[1].Value = cryptedProxyPW;
+                                    }
+                                    catch { }
+                                }
                             }
                             if (node.Attributes[0].Value.Equals("Proxy_Type"))
                             {
@@ -150,6 +196,14 @@ namespace Botler
 
             //close window
             this.Close();
+        }
+
+        private void KeyPressDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveButton.PerformClick();
+            }
         }
     }
 }
