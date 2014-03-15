@@ -136,8 +136,12 @@ namespace Botler
             {
                 irc.Connect(ircServer, ircPort);                
             }
-            catch (Exception e) { form.OutputTextBox.AppendText("Connecting Error: " + e.Message + "\n"); }
+            catch (Exception e) { form.OutputTextBox.AppendText("Connecting Error: " + e.Message + "\n"); }            
+        }
 
+        static void irc_OnConnected(object sender, EventArgs e)
+        {
+            form.OutputTextBox.AppendText(string.Format("Connected to {0}!\n", ircServer));
             try
             {
                 irc.Login(botNick, "Botler", 0, "Botler", ircServerPassword);
@@ -149,9 +153,10 @@ namespace Botler
                         irc.ListenOnce();
                     }
                 }
-                catch (Exception e) { form.OutputTextBox.AppendText("Listen Error Error: " + e.Message + "\n"); }
+                catch (Exception ex) { form.OutputTextBox.AppendText("Listen Error Error: " + ex.Message + "\n"); }
             }
-            catch (Exception e) { form.OutputTextBox.AppendText("Channel Join Error: " + e.Message + "\n"); }
+            catch (Exception ex) { form.OutputTextBox.AppendText("Channel Join Error: " + ex.Message + "\n"); }
+            irc.Disconnect();
         }
 
         private static void joinChannels()
@@ -180,22 +185,20 @@ namespace Botler
 
         static void irc_OnDisconnected(object sender, EventArgs e)
         {
+            //if (!planned)
             //need to reconnect
+            //Connect();
         }
 
         static void irc_OnNickChange(object sender, NickChangeEventArgs e)
         {
             //check tells
+            //update alias list?
         }
 
         static void irc_OnKick(object sender, KickEventArgs e)
         {
             //same as part
-        }
-
-        static void irc_OnConnected(object sender, EventArgs e)
-        {
-            form.OutputTextBox.AppendText(string.Format("Connected to {0}!\n", ircServer));
         }
 
         static void irc_OnInvite(object sender, InviteEventArgs e)
@@ -249,6 +252,18 @@ namespace Botler
                 }
                 irc.SendMessage(SendType.Notice, e.Data.Nick, users);
             }
+            else if (e.Data.MessageArray[0] == ".kill")
+            {
+                Disconnect();
+            }
+        }
+
+        //fix for bug in library, should properly disconnect now
+        static private void Disconnect()
+        {
+            active = false;
+            //set bool to differentiate between planned and unplanned disconnects
+            irc.SendMessage(SendType.Message, botOp, "Goodbye...");
         }
     }
 }
