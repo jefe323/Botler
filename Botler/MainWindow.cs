@@ -85,5 +85,10 @@ namespace Botler
 
             xDoc.Save("Data/Tells.xml");
         }
+
+        private void OutputTextBox_TextChanged(object sender, EventArgs e)
+        {
+            OutputTextBox.ScrollToCaret();
+        }
     }
 }

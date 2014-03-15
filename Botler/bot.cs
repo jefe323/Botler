@@ -124,9 +124,6 @@ namespace Botler
             
             fm.OutputTextBox.AppendText(String.Format("Connecting to {0}:{1}\n", ircServer, ircPort));
 
-            fm.OutputTextBox.SelectionBackColor = Color.Transparent;
-            fm.OutputTextBox.SelectionColor = Color.Black;
-
             Connect();
         }
 
@@ -152,11 +149,11 @@ namespace Botler
                     {
                         irc.ListenOnce();
                     }
+                    irc.Disconnect();
                 }
                 catch (Exception ex) { form.OutputTextBox.AppendText("Listen Error Error: " + ex.Message + "\n"); }
             }
             catch (Exception ex) { form.OutputTextBox.AppendText("Channel Join Error: " + ex.Message + "\n"); }
-            irc.Disconnect();
         }
 
         private static void joinChannels()
