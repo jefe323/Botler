@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Configuration;
 using System.Xml.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Botler
 {
@@ -166,7 +167,28 @@ namespace Botler
             {
                 var t = Task.Factory.StartNew(() => irc.RfcJoin(c.Attribute("Name").Value));
                 //display message in logger
+                createTabPage(c.Attribute("Name").Value);
             }
+        }
+
+        private static void createTabPage(string channel)
+        {
+            TabPage tab = new TabPage(channel);
+            tab.BackColor = Color.White;
+            tab.Name = channel + "Tab";
+            RichTextBox box = new RichTextBox();
+            box.Height = 302;
+            box.Width = 435;
+            box.ReadOnly = true;
+            box.Name = channel;
+            box.Location = new Point(7, 7);
+            //scroll to bottom
+            tab.Controls.Add(box);
+            form.ChannelTabControl.TabPages.Add(tab);
+            
+            //add to listbox
+            form.ChannelList.Items.Add(channel);
+            //double click event
         }
 
         static void irc_OnPart(object sender, PartEventArgs e)
@@ -218,7 +240,7 @@ namespace Botler
 
         static void irc_OnRawMessage(object sender, IrcEventArgs e)
         {
-            //display in logger
+            
         }
 
         static void irc_OnError(object sender, ErrorEventArgs e)
@@ -233,8 +255,9 @@ namespace Botler
 
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
-            form.OutputTextBox.AppendText("<" + e.Data.Channel + "> " + e.Data.Nick + " -- " + e.Data.Message + "\n");
-            
+            RichTextBox box = FindOutputControl(form.ChannelTabControl, e.Data.Channel) as RichTextBox;
+            box.AppendText("<" + e.Data.Nick + "> - " + e.Data.Message + "\n");
+
             //sample command working with active channel syncing
             if (e.Data.MessageArray[0] == ".info")
             {
@@ -261,6 +284,22 @@ namespace Botler
             active = false;
             //set bool to differentiate between planned and unplanned disconnects
             irc.SendMessage(SendType.Message, botOp, "Goodbye...");
+        }
+
+        //used to find the proper rtb to output to
+        //props to http://stackoverflow.com/a/1641282
+        static private Control FindOutputControl(Control container, string name)
+        {
+            if (container.Name == name) return container;
+
+            foreach (Control ctrl in container.Controls)
+            {
+                Control foundCtrl = FindOutputControl(ctrl, name);
+
+                if (foundCtrl != null) return foundCtrl;
+            }
+
+            return null;
         }
     }
 }
