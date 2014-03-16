@@ -42,7 +42,7 @@
             this.ChannelPage = new System.Windows.Forms.TabPage();
             this.ChannelTextBox = new System.Windows.Forms.TextBox();
             this.ChannelTabControl = new System.Windows.Forms.TabControl();
-            this.StatusPage = new System.Windows.Forms.TabPage();
+            this.StatusTab = new System.Windows.Forms.TabPage();
             this.Status = new System.Windows.Forms.RichTextBox();
             this.ChannelList = new System.Windows.Forms.ListBox();
             this.RemPage = new System.Windows.Forms.TabPage();
@@ -55,7 +55,7 @@
             this.groupBox1.SuspendLayout();
             this.ChannelPage.SuspendLayout();
             this.ChannelTabControl.SuspendLayout();
-            this.StatusPage.SuspendLayout();
+            this.StatusTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // OutputTextBox
@@ -190,23 +190,24 @@
             // 
             // ChannelTabControl
             // 
-            this.ChannelTabControl.Controls.Add(this.StatusPage);
+            this.ChannelTabControl.Controls.Add(this.StatusTab);
             this.ChannelTabControl.Location = new System.Drawing.Point(149, 7);
             this.ChannelTabControl.Name = "ChannelTabControl";
             this.ChannelTabControl.SelectedIndex = 0;
             this.ChannelTabControl.Size = new System.Drawing.Size(456, 341);
             this.ChannelTabControl.TabIndex = 1;
+            this.ChannelTabControl.SelectedIndexChanged += new System.EventHandler(this.ChannelTabControl_SelectedIndexChanged);
             // 
-            // StatusPage
+            // StatusTab
             // 
-            this.StatusPage.Controls.Add(this.Status);
-            this.StatusPage.Location = new System.Drawing.Point(4, 22);
-            this.StatusPage.Name = "StatusPage";
-            this.StatusPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StatusPage.Size = new System.Drawing.Size(448, 315);
-            this.StatusPage.TabIndex = 0;
-            this.StatusPage.Text = "Status";
-            this.StatusPage.UseVisualStyleBackColor = true;
+            this.StatusTab.Controls.Add(this.Status);
+            this.StatusTab.Location = new System.Drawing.Point(4, 22);
+            this.StatusTab.Name = "StatusTab";
+            this.StatusTab.Padding = new System.Windows.Forms.Padding(3);
+            this.StatusTab.Size = new System.Drawing.Size(448, 315);
+            this.StatusTab.TabIndex = 0;
+            this.StatusTab.Text = "Status";
+            this.StatusTab.UseVisualStyleBackColor = true;
             // 
             // Status
             // 
@@ -226,6 +227,7 @@
             this.ChannelList.Name = "ChannelList";
             this.ChannelList.Size = new System.Drawing.Size(135, 368);
             this.ChannelList.TabIndex = 0;
+            this.ChannelList.SelectedIndexChanged += new System.EventHandler(this.ChannelListIndexChanged);
             // 
             // RemPage
             // 
@@ -287,7 +289,7 @@
             this.ChannelPage.ResumeLayout(false);
             this.ChannelPage.PerformLayout();
             this.ChannelTabControl.ResumeLayout(false);
-            this.StatusPage.ResumeLayout(false);
+            this.StatusTab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,7 +314,7 @@
         private System.Windows.Forms.Button DisconnectButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox ChannelTextBox;
-        private System.Windows.Forms.TabPage StatusPage;
+        private System.Windows.Forms.TabPage StatusTab;
         internal System.Windows.Forms.TabControl ChannelTabControl;
         internal System.Windows.Forms.ListBox ChannelList;
         internal System.Windows.Forms.RichTextBox Status;

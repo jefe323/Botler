@@ -86,9 +86,26 @@ namespace Botler
             xDoc.Save("Data/Tells.xml");
         }
 
-        private void OutputTextBox_TextChanged(object sender, EventArgs e)
+        internal void OutputTextBox_TextChanged(object sender, EventArgs e)
         {
-            OutputTextBox.ScrollToCaret();
+            //OutputTextBox.ScrollToCaret();
+            RichTextBox box = (RichTextBox)sender;
+            box.ScrollToCaret();
+        }
+
+        private void ChannelListIndexChanged(object sender, EventArgs e)
+        {
+            string selected = (string)ChannelList.SelectedItem;
+            //MessageBox.Show(selected);
+            ChannelTabControl.SelectedTab = Bot.FindOutputControl(ChannelTabControl, selected + "Tab") as TabPage;
+        }
+
+        private void ChannelTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TabPage selected = ChannelTabControl.SelectedTab;
+            string name = selected.Name.Replace("Tab", "");
+
+            ChannelList.SelectedItem = name;
         }
     }
 }

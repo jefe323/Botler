@@ -183,12 +183,13 @@ namespace Botler
             box.Name = channel;
             box.Location = new Point(7, 7);
             //scroll to bottom
+            box.TextChanged += form.OutputTextBox_TextChanged;
             tab.Controls.Add(box);
             form.ChannelTabControl.TabPages.Add(tab);
             
             //add to listbox
             form.ChannelList.Items.Add(channel);
-            //double click event
+            
         }
 
         static void irc_OnPart(object sender, PartEventArgs e)
@@ -239,8 +240,7 @@ namespace Botler
         }
 
         static void irc_OnRawMessage(object sender, IrcEventArgs e)
-        {
-            
+        {   
         }
 
         static void irc_OnError(object sender, ErrorEventArgs e)
@@ -256,7 +256,7 @@ namespace Botler
         static void irc_OnChannelMessage(object sender, IrcEventArgs e)
         {
             RichTextBox box = FindOutputControl(form.ChannelTabControl, e.Data.Channel) as RichTextBox;
-            box.AppendText("<" + e.Data.Nick + "> - " + e.Data.Message + "\n");
+            Task.Factory.StartNew(() => box.AppendText("<" + e.Data.Nick + "> - " + e.Data.Message + "\n"));
 
             //sample command working with active channel syncing
             if (e.Data.MessageArray[0] == ".info")
@@ -288,7 +288,7 @@ namespace Botler
 
         //used to find the proper rtb to output to
         //props to http://stackoverflow.com/a/1641282
-        static private Control FindOutputControl(Control container, string name)
+        static internal Control FindOutputControl(Control container, string name)
         {
             if (container.Name == name) return container;
 
