@@ -49,6 +49,9 @@
             this.PluginPage = new System.Windows.Forms.TabPage();
             this.CommandPage = new System.Windows.Forms.TabPage();
             this.InfoPage = new System.Windows.Forms.TabPage();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.HomePage.SuspendLayout();
@@ -56,6 +59,9 @@
             this.ChannelPage.SuspendLayout();
             this.ChannelTabControl.SuspendLayout();
             this.StatusTab.SuspendLayout();
+            this.PluginPage.SuspendLayout();
+            this.InfoPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // OutputTextBox
@@ -241,6 +247,8 @@
             // 
             // PluginPage
             // 
+            this.PluginPage.Controls.Add(this.richTextBox1);
+            this.PluginPage.Controls.Add(this.listBox1);
             this.PluginPage.Location = new System.Drawing.Point(4, 22);
             this.PluginPage.Name = "PluginPage";
             this.PluginPage.Padding = new System.Windows.Forms.Padding(3);
@@ -261,6 +269,7 @@
             // 
             // InfoPage
             // 
+            this.InfoPage.Controls.Add(this.pictureBox1);
             this.InfoPage.Location = new System.Drawing.Point(4, 22);
             this.InfoPage.Name = "InfoPage";
             this.InfoPage.Padding = new System.Windows.Forms.Padding(3);
@@ -268,6 +277,31 @@
             this.InfoPage.TabIndex = 5;
             this.InfoPage.Text = "Information";
             this.InfoPage.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(6, 6);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(155, 368);
+            this.listBox1.TabIndex = 0;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(167, 6);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(438, 368);
+            this.richTextBox1.TabIndex = 1;
+            this.richTextBox1.Text = "";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(306, 4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(299, 372);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // MainWindow
             // 
@@ -290,6 +324,9 @@
             this.ChannelPage.PerformLayout();
             this.ChannelTabControl.ResumeLayout(false);
             this.StatusTab.ResumeLayout(false);
+            this.PluginPage.ResumeLayout(false);
+            this.InfoPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -318,6 +355,9 @@
         internal System.Windows.Forms.TabControl ChannelTabControl;
         internal System.Windows.Forms.ListBox ChannelList;
         internal System.Windows.Forms.RichTextBox Status;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
     }
 }
