@@ -62,6 +62,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.proxyCheckBox = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.settingsCancelButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.proxyGroupBox.SuspendLayout();
@@ -75,7 +76,7 @@
             // 
             this.SaveButton.Location = new System.Drawing.Point(26, 311);
             this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(214, 72);
+            this.SaveButton.Size = new System.Drawing.Size(104, 25);
             this.SaveButton.TabIndex = 0;
             this.SaveButton.Text = "Save";
             this.SaveButton.UseVisualStyleBackColor = true;
@@ -419,11 +420,22 @@
     "ettings\r\n to another account/computer, you will need\r\n to manually reinput your " +
     "passwords";
             // 
+            // settingsCancelButton
+            // 
+            this.settingsCancelButton.Location = new System.Drawing.Point(132, 311);
+            this.settingsCancelButton.Name = "settingsCancelButton";
+            this.settingsCancelButton.Size = new System.Drawing.Size(104, 25);
+            this.settingsCancelButton.TabIndex = 19;
+            this.settingsCancelButton.Text = "Cancel";
+            this.settingsCancelButton.UseVisualStyleBackColor = true;
+            this.settingsCancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 395);
+            this.ClientSize = new System.Drawing.Size(266, 347);
+            this.Controls.Add(this.settingsCancelButton);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.SaveButton);
@@ -482,5 +494,6 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.CheckBox proxyCheckBox;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button settingsCancelButton;
     }
 }

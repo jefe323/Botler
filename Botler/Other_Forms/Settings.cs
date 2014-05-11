@@ -233,5 +233,10 @@ namespace Botler
                 proxyGroupBox.Enabled = false;
             }
         }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

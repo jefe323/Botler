@@ -68,38 +68,41 @@ namespace Botler
             irc.SendDelay = 500;
 
             #region proxy connection settings
-            if (ConfigurationManager.AppSettings["Proxy_Address"] != "" && ConfigurationManager.AppSettings["Proxy_Address"] != null)
+            if (ConfigurationManager.AppSettings["Proxy"].ToLower() == "true")
             {
-                irc.ProxyHost = ConfigurationManager.AppSettings["Proxy_Address"];
-                irc.ProxyPort = Convert.ToInt32(ConfigurationManager.AppSettings["Proxy_Port"]);
-                irc.ProxyUsername = ConfigurationManager.AppSettings["Proxy_User"];
-                if (ConfigurationManager.AppSettings["Proxy_Password"].Length >= 1)
+                if (ConfigurationManager.AppSettings["Proxy_Address"] != "" && ConfigurationManager.AppSettings["Proxy_Address"] != null)
                 {
-                    try
+                    irc.ProxyHost = ConfigurationManager.AppSettings["Proxy_Address"];
+                    irc.ProxyPort = Convert.ToInt32(ConfigurationManager.AppSettings["Proxy_Port"]);
+                    irc.ProxyUsername = ConfigurationManager.AppSettings["Proxy_User"];
+                    if (ConfigurationManager.AppSettings["Proxy_Password"].Length >= 1)
                     {
-                        irc.ProxyPassword = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Proxy_Password"]);
+                        try
+                        {
+                            irc.ProxyPassword = Utilities.Crypto.Decrypt(ConfigurationManager.AppSettings["Proxy_Password"]);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                else { irc.ProxyPassword = ""; }
-                string pType = ConfigurationManager.AppSettings["Proxy_Type"];
-                switch (pType.ToLower())
-                {
-                    case "http":
-                        irc.ProxyType = ProxyType.Http;
-                        break;
-                    case "socks4":
-                        irc.ProxyType = ProxyType.Socks4;
-                        break;
-                    case "socks4a":
-                        irc.ProxyType = ProxyType.Socks4a;
-                        break;
-                    case "socks5":
-                        irc.ProxyType = ProxyType.Socks5;
-                        break;
-                    default:
-                        irc.ProxyType = ProxyType.None;
-                        break;
+                    else { irc.ProxyPassword = ""; }
+                    string pType = ConfigurationManager.AppSettings["Proxy_Type"];
+                    switch (pType.ToLower())
+                    {
+                        case "http":
+                            irc.ProxyType = ProxyType.Http;
+                            break;
+                        case "socks4":
+                            irc.ProxyType = ProxyType.Socks4;
+                            break;
+                        case "socks4a":
+                            irc.ProxyType = ProxyType.Socks4a;
+                            break;
+                        case "socks5":
+                            irc.ProxyType = ProxyType.Socks5;
+                            break;
+                        default:
+                            irc.ProxyType = ProxyType.None;
+                            break;
+                    }
                 }
             }
             #endregion
@@ -139,6 +142,8 @@ namespace Botler
 
         static void irc_OnConnected(object sender, EventArgs e)
         {
+            form.ConnectButton.Enabled = false;
+            form.DisconnectButton.Enabled = true;
             form.OutputTextBox.AppendText(string.Format("Connected to {0}!\n", ircServer));
             try
             {
@@ -205,6 +210,8 @@ namespace Botler
 
         static void irc_OnDisconnected(object sender, EventArgs e)
         {
+            form.ConnectButton.Enabled = true;
+            form.DisconnectButton.Enabled = false;
             //use 'active' bool to differentiate between planned and unplanned dc
             //active = unplanned, !active = planned
             //if (!planned)
@@ -220,12 +227,39 @@ namespace Botler
 
         static void irc_OnKick(object sender, KickEventArgs e)
         {
-            //same as part
+            //same as part (log kick in seen)
+
+            //bot getting kicked from channel, remove from channels.xml so it won't rejoin on a (re)connect
+            if (e.Whom == botNick)
+            {
+                XDocument xDoc = XDocument.Load("Data/Channels.xml");
+
+                var chanToRemove = from element in xDoc.Elements("Channels").Elements("Channel")
+                                   where element.Attribute("Name").Value == e.Channel
+                                   select element;
+
+                foreach(var c in chanToRemove)
+                {
+                    c.Remove();
+                }
+
+                xDoc.Save("Data/Channels.xml");
+            }
         }
 
         static void irc_OnInvite(object sender, InviteEventArgs e)
         {
             //join channel (no more join command, invite only)
+            XElement xEle = XElement.Load("Data/Channels.xml");
+            xEle.Add(new XElement("Channel",
+                new XAttribute("Name", e.Channel),
+                new XElement("Secret", false),
+                new XElement("Quiet", false),
+                new XElement("WelcomeMessage", ""),
+                new XElement("Rules", ""),
+                new XElement("InvitedBy", e.Data.Nick)));
+
+            xEle.Save("Data/Channels.xml");
         }
 
         static void irc_OnCtcpRequest(object sender, CtcpEventArgs e)
@@ -260,6 +294,8 @@ namespace Botler
         {
             RichTextBox box = FindOutputControl(form.ChannelTabControl, e.Data.Channel) as RichTextBox;
             Task.Factory.StartNew(() => box.AppendText("<" + e.Data.Nick + "> - " + e.Data.Message + "\n"));
+
+            //log info
 
             //sample command working with active channel syncing
             if (e.Data.MessageArray[0] == ".info")
