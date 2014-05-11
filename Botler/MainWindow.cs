@@ -107,5 +107,24 @@ namespace Botler
 
             ChannelList.SelectedItem = name;
         }
+
+        public void updateStatus(string text)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(updateStatus), text);
+                return;
+            }
+            else 
+            { 
+                this.StatusOutput.AppendText(text + "\n"); 
+                this.StatusOutput.ScrollToCaret(); 
+            }
+        }
+
+        private void DisconnectButton_Click(object sender, EventArgs e)
+        {
+            Bot.Disconnect();
+        }
     }
 }

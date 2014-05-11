@@ -14,17 +14,17 @@ namespace Botler
 {
     class Bot
     {
-        private static IrcClient irc = new IrcClient();
+        internal static IrcClient irc = new IrcClient();
         private static MainWindow form;
         private static bool active;
 
         private static string ircServer;
         private static int ircPort;
         private static string ircServerPassword;
-        private static string botNick;
+        internal static string botNick;
         private static string botOp;
         private static string botIdent;
-        
+
         public static void Start(MainWindow fm)
         {
             //Settings
@@ -205,6 +205,8 @@ namespace Botler
 
         static void irc_OnDisconnected(object sender, EventArgs e)
         {
+            //use 'active' bool to differentiate between planned and unplanned dc
+            //active = unplanned, !active = planned
             //if (!planned)
             //need to reconnect
             //Connect();
@@ -240,7 +242,8 @@ namespace Botler
         }
 
         static void irc_OnRawMessage(object sender, IrcEventArgs e)
-        {   
+        {
+            form.updateStatus(e.Data.Message);
         }
 
         static void irc_OnError(object sender, ErrorEventArgs e)
@@ -274,16 +277,17 @@ namespace Botler
             }
             else if (e.Data.MessageArray[0] == ".kill")
             {
-                Disconnect();
+                Disconnect();                
             }
         }
 
-        //fix for bug in library, should properly disconnect now
-        static private void Disconnect()
+        static internal void Disconnect()
         {
             active = false;
-            //set bool to differentiate between planned and unplanned disconnects
             irc.SendMessage(SendType.Message, botOp, "Goodbye...");
+            //required to kill bot on time, else it will take approx. 1.5 minutes to dc :(
+            Thread.Sleep(1000);
+            irc.SendMessage(SendType.Message, botNick, "die");
         }
 
         //used to find the proper rtb to output to

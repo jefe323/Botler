@@ -43,14 +43,14 @@
             this.ChannelTextBox = new System.Windows.Forms.TextBox();
             this.ChannelTabControl = new System.Windows.Forms.TabControl();
             this.StatusTab = new System.Windows.Forms.TabPage();
-            this.Status = new System.Windows.Forms.RichTextBox();
+            this.StatusOutput = new System.Windows.Forms.RichTextBox();
             this.ChannelList = new System.Windows.Forms.ListBox();
             this.RemPage = new System.Windows.Forms.TabPage();
             this.PluginPage = new System.Windows.Forms.TabPage();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.CommandPage = new System.Windows.Forms.TabPage();
             this.InfoPage = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -173,6 +173,7 @@
             this.DisconnectButton.TabIndex = 2;
             this.DisconnectButton.Text = "Disconnect!";
             this.DisconnectButton.UseVisualStyleBackColor = true;
+            this.DisconnectButton.Click += new System.EventHandler(this.DisconnectButton_Click);
             // 
             // ChannelPage
             // 
@@ -206,7 +207,7 @@
             // 
             // StatusTab
             // 
-            this.StatusTab.Controls.Add(this.Status);
+            this.StatusTab.Controls.Add(this.StatusOutput);
             this.StatusTab.Location = new System.Drawing.Point(4, 22);
             this.StatusTab.Name = "StatusTab";
             this.StatusTab.Padding = new System.Windows.Forms.Padding(3);
@@ -215,14 +216,14 @@
             this.StatusTab.Text = "Status";
             this.StatusTab.UseVisualStyleBackColor = true;
             // 
-            // Status
+            // StatusOutput
             // 
-            this.Status.Location = new System.Drawing.Point(7, 7);
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Size = new System.Drawing.Size(435, 302);
-            this.Status.TabIndex = 0;
-            this.Status.Text = "";
+            this.StatusOutput.Location = new System.Drawing.Point(7, 7);
+            this.StatusOutput.Name = "StatusOutput";
+            this.StatusOutput.ReadOnly = true;
+            this.StatusOutput.Size = new System.Drawing.Size(435, 302);
+            this.StatusOutput.TabIndex = 0;
+            this.StatusOutput.Text = "";
             // 
             // ChannelList
             // 
@@ -257,6 +258,23 @@
             this.PluginPage.Text = "Plugins";
             this.PluginPage.UseVisualStyleBackColor = true;
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(167, 6);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(438, 368);
+            this.richTextBox1.TabIndex = 1;
+            this.richTextBox1.Text = "";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(6, 6);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(155, 368);
+            this.listBox1.TabIndex = 0;
+            // 
             // CommandPage
             // 
             this.CommandPage.Location = new System.Drawing.Point(4, 22);
@@ -277,23 +295,6 @@
             this.InfoPage.TabIndex = 5;
             this.InfoPage.Text = "Information";
             this.InfoPage.UseVisualStyleBackColor = true;
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(6, 6);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(155, 368);
-            this.listBox1.TabIndex = 0;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(167, 6);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(438, 368);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
             // 
             // pictureBox1
             // 
@@ -354,7 +355,7 @@
         private System.Windows.Forms.TabPage StatusTab;
         internal System.Windows.Forms.TabControl ChannelTabControl;
         internal System.Windows.Forms.ListBox ChannelList;
-        internal System.Windows.Forms.RichTextBox Status;
+        internal System.Windows.Forms.RichTextBox StatusOutput;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
