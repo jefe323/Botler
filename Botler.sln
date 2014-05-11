@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botler", "Botler\Botler.csproj", "{DBF5E1B6-0631-4A56-B63E-CF3B496B2928}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botler.Plugin.Core", "Botler.Plugin.Core\Botler.Plugin.Core.csproj", "{08711B46-B2AA-49A6-BEA5-F89A5FF31B13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DBF5E1B6-0631-4A56-B63E-CF3B496B2928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBF5E1B6-0631-4A56-B63E-CF3B496B2928}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBF5E1B6-0631-4A56-B63E-CF3B496B2928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08711B46-B2AA-49A6-BEA5-F89A5FF31B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08711B46-B2AA-49A6-BEA5-F89A5FF31B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08711B46-B2AA-49A6-BEA5-F89A5FF31B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08711B46-B2AA-49A6-BEA5-F89A5FF31B13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

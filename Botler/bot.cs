@@ -162,6 +162,18 @@ namespace Botler
             catch (Exception ex) { form.OutputTextBox.AppendText("Channel Join Error: " + ex.Message + "\n"); }
         }
 
+
+        static void irc_OnDisconnected(object sender, EventArgs e)
+        {
+            form.ConnectButton.Enabled = true;
+            form.DisconnectButton.Enabled = false;
+            //use 'active' bool to differentiate between planned and unplanned dc
+            //active = unplanned, !active = planned
+            //if (!planned)
+            //need to reconnect
+            //Connect();
+        }
+
         private static void joinChannels()
         {
             XDocument xDoc = XDocument.Load("Data/Channels.xml");
@@ -207,18 +219,7 @@ namespace Botler
             //update seen
             //display welcome message for channel if configured
         }
-
-        static void irc_OnDisconnected(object sender, EventArgs e)
-        {
-            form.ConnectButton.Enabled = true;
-            form.DisconnectButton.Enabled = false;
-            //use 'active' bool to differentiate between planned and unplanned dc
-            //active = unplanned, !active = planned
-            //if (!planned)
-            //need to reconnect
-            //Connect();
-        }
-
+        
         static void irc_OnNickChange(object sender, NickChangeEventArgs e)
         {
             //check tells

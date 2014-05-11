@@ -40,6 +40,8 @@ namespace Botler
             //help?
             //alias?
             //stats?
+
+            //load plugins and commands
         }
 
         private void button1_Click(object sender, EventArgs e)
