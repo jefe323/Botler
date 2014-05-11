@@ -12,14 +12,14 @@ namespace Botler.Utilities
         {
             return Convert.ToBase64String(
                 ProtectedData.Protect(
-                    Encoding.Unicode.GetBytes(text), null, DataProtectionScope.LocalMachine));
+                    Encoding.Unicode.GetBytes(text), null, DataProtectionScope.CurrentUser));
         }
 
         public static string Decrypt(this string text)
         {
             return Encoding.Unicode.GetString(
                 ProtectedData.Unprotect(
-                     Convert.FromBase64String(text), null, DataProtectionScope.LocalMachine));
+                     Convert.FromBase64String(text), null, DataProtectionScope.CurrentUser));
         }
     }
 }

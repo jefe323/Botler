@@ -21,6 +21,10 @@ namespace Botler
         private void Settings_Load(object sender, EventArgs e)
         {
             //load values from config file
+
+            /////////////////
+            //Server SETTINGS
+            /////////////////
             this.ServerAddressBox.Text = ConfigurationManager.AppSettings["IRC_Server_Address"];
             this.ServerPortBox.Text = ConfigurationManager.AppSettings["IRC_Server_Port"];
             if (ConfigurationManager.AppSettings["IRC_Server_Password"] != "" || ConfigurationManager.AppSettings["IRC_Server_Password"] != null)
@@ -31,8 +35,10 @@ namespace Botler
                 }
                 catch { }
             }
-            
 
+            //////////////
+            //BOT SETTINGS
+            //////////////
             this.BotNickBox.Text = ConfigurationManager.AppSettings["Bot_Nick"];
             if (ConfigurationManager.AppSettings["Bot_Ident_Password"] != "" || ConfigurationManager.AppSettings["Bot_Ident_Password"] != null)
             {
@@ -44,6 +50,12 @@ namespace Botler
             }            
             this.CommandSymbolBox.Text = ConfigurationManager.AppSettings["Bot_Command_Symbol"];
             this.BotOpBox.Text = ConfigurationManager.AppSettings["Bot_Operator"];
+
+            ////////////////
+            //PROXY SETTINGS
+            ////////////////
+            if (ConfigurationManager.AppSettings["Proxy"].ToLower() == "true") { proxyCheckBox.Checked = true; }
+            else { proxyCheckBox.Checked = false; }
 
             this.ProxyAddressBox.Text = ConfigurationManager.AppSettings["Proxy_Address"];
             this.ProxyPortBox.Text = ConfigurationManager.AppSettings["Proxy_Port"];
@@ -137,6 +149,10 @@ namespace Botler
                                 node.Attributes[1].Value = this.BotOpBox.Text;
                             }
 
+                            if (node.Attributes[0].Value.Equals("Proxy"))
+                            {
+                                node.Attributes[1].Value = this.proxyCheckBox.Checked.ToString();
+                            }
                             if (node.Attributes[0].Value.Equals("Proxy_Address"))
                             {
                                 node.Attributes[1].Value = this.ProxyAddressBox.Text;
@@ -203,6 +219,18 @@ namespace Botler
             if (e.KeyCode == Keys.Enter)
             {
                 SaveButton.PerformClick();
+            }
+        }
+
+        private void proxyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (proxyCheckBox.Checked)
+            {
+                proxyGroupBox.Enabled = true;
+            }
+            else
+            {
+                proxyGroupBox.Enabled = false;
             }
         }
     }

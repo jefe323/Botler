@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.OutputTextBox = new System.Windows.Forms.RichTextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ConnectButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +52,8 @@
             this.CommandPage = new System.Windows.Forms.TabPage();
             this.InfoPage = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.listBox2 = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.HomePage.SuspendLayout();
@@ -60,6 +62,7 @@
             this.ChannelTabControl.SuspendLayout();
             this.StatusTab.SuspendLayout();
             this.PluginPage.SuspendLayout();
+            this.CommandPage.SuspendLayout();
             this.InfoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -75,15 +78,15 @@
             this.OutputTextBox.Text = "";
             this.OutputTextBox.TextChanged += new System.EventHandler(this.OutputTextBox_TextChanged);
             // 
-            // button1
+            // ConnectButton
             // 
-            this.button1.Location = new System.Drawing.Point(42, 57);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Connect!";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.ConnectButton.Location = new System.Drawing.Point(42, 57);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(180, 23);
+            this.ConnectButton.TabIndex = 1;
+            this.ConnectButton.Text = "Connect!";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // menuStrip1
             // 
@@ -157,7 +160,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.DisconnectButton);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.ConnectButton);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(270, 118);
@@ -167,6 +170,7 @@
             // 
             // DisconnectButton
             // 
+            this.DisconnectButton.Enabled = false;
             this.DisconnectButton.Location = new System.Drawing.Point(42, 86);
             this.DisconnectButton.Name = "DisconnectButton";
             this.DisconnectButton.Size = new System.Drawing.Size(180, 23);
@@ -277,6 +281,8 @@
             // 
             // CommandPage
             // 
+            this.CommandPage.Controls.Add(this.richTextBox2);
+            this.CommandPage.Controls.Add(this.listBox2);
             this.CommandPage.Location = new System.Drawing.Point(4, 22);
             this.CommandPage.Name = "CommandPage";
             this.CommandPage.Padding = new System.Windows.Forms.Padding(3);
@@ -304,6 +310,24 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox2.Location = new System.Drawing.Point(167, 7);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(438, 368);
+            this.richTextBox2.TabIndex = 3;
+            this.richTextBox2.Text = "";
+            // 
+            // listBox2
+            // 
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.Location = new System.Drawing.Point(6, 7);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(155, 368);
+            this.listBox2.TabIndex = 2;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -326,6 +350,7 @@
             this.ChannelTabControl.ResumeLayout(false);
             this.StatusTab.ResumeLayout(false);
             this.PluginPage.ResumeLayout(false);
+            this.CommandPage.ResumeLayout(false);
             this.InfoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -336,7 +361,7 @@
         #endregion
 
         internal System.Windows.Forms.RichTextBox OutputTextBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button ConnectButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
@@ -359,6 +384,8 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.ListBox listBox2;
 
     }
 }

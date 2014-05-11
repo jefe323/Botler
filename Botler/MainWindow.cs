@@ -45,7 +45,8 @@ namespace Botler
         private void button1_Click(object sender, EventArgs e)
         {
             RunBot = Task.Factory.StartNew(() => Bot.Start(this));
-            button1.Enabled = false;
+            ConnectButton.Enabled = false;
+            DisconnectButton.Enabled = true;
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -125,6 +126,8 @@ namespace Botler
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
             Bot.Disconnect();
+            DisconnectButton.Enabled = false;
+            ConnectButton.Enabled = true;
         }
     }
 }

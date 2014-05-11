@@ -14,14 +14,14 @@ namespace Botler
 {
     class Bot
     {
-        internal static IrcClient irc = new IrcClient();
+        private static IrcClient irc = new IrcClient();
         private static MainWindow form;
         private static bool active;
 
         private static string ircServer;
         private static int ircPort;
         private static string ircServerPassword;
-        internal static string botNick;
+        private static string botNick;
         private static string botOp;
         private static string botIdent;
 
